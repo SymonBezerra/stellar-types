@@ -24,8 +24,5 @@ int stm_new(lua_State *L) {
         lua_pop(L, 1); /* remove value, keep key for next iteration */
     }
 
-
-    /* Validation logic (as in your code) */
-    /* todo: perform validation */
     return 1;
 }
