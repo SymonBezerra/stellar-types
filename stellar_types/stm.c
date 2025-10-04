@@ -15,14 +15,19 @@ int stm_new(lua_State *L) {
     while (lua_next(L, 2) != 0) {
         /* key at -2, value at -1 */
         lua_pushvalue(L, -2); /* copy key */
-        lua_pushvalue(L, -1); /* copy value */
+        lua_pushvalue(L, -2); /* copy value, which moves below key */
         lua_settable(L, instance_index);
 
         lua_getfield(L, validators_index, lua_tostring(L, -2));
-        lua_pushvalue(L, -3); /* push value to validate */
+        lua_pushvalue(L, -2); /* push value to validate */
         lua_call(L, 1, 0);    /* call validator */
         lua_pop(L, 1); /* remove value, keep key for next iteration */
     }
-
+    /* Set the metatable of the instance to the original table (MyType) */
+    lua_pushvalue(L, 1);           /* push MyType */
+    lua_setmetatable(L, instance_index); /* set as metatable for instance */
+    
+    /* Return the instance table */
+    lua_pushvalue(L, instance_index);
     return 1;
 }

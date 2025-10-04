@@ -1,6 +1,6 @@
 types = require("stellar_types")
 
-MyType = types.create_type('MyType', {
+MyType = types.create_type({
     ['name'] = {
         ['type'] = 'string',
         ['validation'] = function(v) return #v > 0 end
@@ -31,4 +31,39 @@ instance = MyType:new({
     active = true
 })
 
-print(instance.name)
+print(instance.name) --> Example
+print(instance.value) --> 0.5
+print(instance.active) --> true
+
+
+-- TODO: add validation for reattribution of values
+
+complex_schema = {
+    ['type'] = {
+        ['type'] = MyType
+    }
+}
+
+NewType = types.create_type({
+    ['description'] = {
+        ['type'] = 'string'
+    },
+    ['count'] = {
+        ['type'] = 'integer',
+        ['validation'] = function(v) return v >= 0 end
+    }
+})
+
+new_instance = NewType:new({
+    description = "A new type instance",
+    count = 10
+})
+
+ComplexType = types.create_type(complex_schema)
+
+
+complex_instance = ComplexType:new({
+    type = new_instance
+})
+
+print(complex_instance.type.name) --> Example
