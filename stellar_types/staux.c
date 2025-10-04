@@ -46,7 +46,7 @@ int staux_register_type(lua_State *L) {
         if (!lua_rawequal(L, -1, lua_upvalueindex(1))) {
             luaL_error(L, "Wrong type for field \'%s\'", lua_tostring(L, -5));
         }
-        lua_pop(L, 1); /* remove metatable */
+        lua_pop(L, 1);
     }
     return 0;
 }
