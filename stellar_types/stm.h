@@ -10,5 +10,6 @@
 /* Stellar Types module functions */
 
 int stm_new(lua_State *L);
+int stm_newindex(lua_State *L);
 
 #endif

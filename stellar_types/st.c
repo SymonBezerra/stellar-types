@@ -13,12 +13,6 @@ int st_create_type(lua_State *L) {
     lua_pushcfunction(L, stm_new);
     lua_setfield(L, methods_index, "new");
 
-    /* set methods table as metatable for class table */
-    lua_newtable(L); /* metatable for class */
-    lua_pushvalue(L, methods_index);
-    lua_setfield(L, -2, "__index");
-    lua_setmetatable(L, class_index);
-
     lua_newtable(L);
     int schema_index = lua_gettop(L);
 
@@ -42,8 +36,16 @@ int st_create_type(lua_State *L) {
         lua_pop(L, 1);
     }
 
+    /* set methods table as metatable for class table */
+    lua_newtable(L); /* metatable for class */
+    lua_pushvalue(L, methods_index);
+    lua_setfield(L, -2, "__index");
+    lua_setmetatable(L, class_index);
+    /* set schema as __validators field in class table */
+    lua_pushvalue(L, schema_index);
     lua_setfield(L, class_index, "__validators");
-
+    lua_pushcfunction(L, stm_newindex);
+    lua_setfield(L, class_index, "__newindex");
     lua_pushvalue(L, class_index);
 
     return 1;

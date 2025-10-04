@@ -9,7 +9,9 @@ int stm_new(lua_State *L) {
     lua_newtable(L); /* instance table */
     int instance_index = lua_gettop(L);
 
-    /* Copy keys and values from table at index 1 to instance table */
+    /* Copy keys and values from table at indextrue 1 to instance table */
+    lua_pushvalue(L, 1);           /* push MyType */
+    lua_setmetatable(L, instance_index); /* set as metatable for instance */
 
     lua_pushnil(L);  /* first key for lua_next */
     while (lua_next(L, 2) != 0) {
@@ -17,17 +19,36 @@ int stm_new(lua_State *L) {
         lua_pushvalue(L, -2); /* copy key */
         lua_pushvalue(L, -2); /* copy value, which moves below key */
         lua_settable(L, instance_index);
-
-        lua_getfield(L, validators_index, lua_tostring(L, -2));
-        lua_pushvalue(L, -2); /* push value to validate */
-        lua_call(L, 1, 0);    /* call validator */
-        lua_pop(L, 1); /* remove value, keep key for next iteration */
+        lua_pop(L, 1);
     }
     /* Set the metatable of the instance to the original table (MyType) */
-    lua_pushvalue(L, 1);           /* push MyType */
-    lua_setmetatable(L, instance_index); /* set as metatable for instance */
     
     /* Return the instance table */
     lua_pushvalue(L, instance_index);
     return 1;
+}
+
+int stm_newindex(lua_State *L) {
+    printf("In stm_newindex\n");
+    luaL_checktype(L, 1, LUA_TTABLE); /* instance table */
+    const char *key = luaL_checkstring(L, 2);
+
+    lua_getmetatable(L, 1);
+    /* Get the __validators table from the metatable */
+    lua_getfield(L, -1, "__validators");
+
+    if (lua_istable(L, -1)) {
+        lua_getfield(L, -1, key);
+        if (lua_isfunction(L, -1)) {
+            lua_pushvalue(L, 3); /* value to validate */
+            lua_pushvalue(L, 2); /* field name */
+            lua_call(L, 2, 0);   /* call validator */
+        }
+        lua_pop(L, 1); /* remove validator or nil */
+    }
+    lua_pushvalue(L, 2); /* key */
+    lua_pushvalue(L, 3); /* value */
+    lua_rawset(L, 1);  /* instance[key] = value */
+
+    return 0;
 }
