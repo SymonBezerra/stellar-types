@@ -1,0 +1,47 @@
+#include "st.h"
+
+int st_create_type(lua_State *L) {
+    luaL_checktype(L, 2, LUA_TTABLE); /* check the schema passed to the constructor */
+
+    lua_newtable(L); /* metatable / class table */
+    int class_index = lua_gettop(L);
+
+    /* methods table */
+    lua_newtable(L);
+    int methods_index = lua_gettop(L);
+
+    lua_pushcfunction(L, stm_new);
+    lua_setfield(L, methods_index, "new");
+
+    lua_newtable(L); /* metatable */
+    lua_pushvalue(L, methods_index);
+    lua_setfield(L, -2, "__index");
+
+    lua_setmetatable(L, class_index);
+
+    lua_newtable(L);
+    int schema_index = lua_gettop(L);
+
+    lua_pushnil(L);
+    while (lua_next(L, 2) != 0) {
+        const char* name = lua_tostring(L, -2);
+        lua_getfield(L, -1, STELLAR_TYPE_OPTION);
+        const char* type_value = lua_tostring(L, -1);
+        lua_pop(L, 1);
+
+        lua_pushstring(L, type_value);
+        /*
+        lua_pushstring(L, name);
+        */
+        lua_pushcclosure(L, staux_register_type, 1);
+
+        lua_setfield(L, schema_index, name);
+        lua_pop(L, 1);
+    }
+
+    lua_setfield(L, class_index, "__validators");
+
+    lua_pushvalue(L, class_index);
+
+    return 1;
+}
