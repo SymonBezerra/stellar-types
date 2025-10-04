@@ -36,7 +36,6 @@ print(instance.value) --> 0.5
 print(instance.active) --> true
 
 instance.name = 0 --> invalid assignment, raises error
-print(getmetatable(instance).__newindex) --> Example, unchanged
 
 
 -- TODO: add validation for reattribution of values
