@@ -1,7 +1,5 @@
 # StellarTypes - A Pydantic inspired library for Lua tables
 
-**WORK IN PROGRESS**
-
 `StellarTypes` is a simple validation module for Lua tables inspired by Python's Pydantic. It creates object-oriented tables (based on Ierusalimschy's Programming in Lua approach for OOP using the data structure) with an enforced schema, so types are validated on instance creation. Let's see an example:
 
 ```lua

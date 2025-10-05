@@ -1,3 +1,5 @@
+-- this script must be called from Python's `lupa` module
+-- it demonstrates how to use Stellar with Python userdata types
 types = require("stellar_types")
 
 UserdataTypes = types.create_type({

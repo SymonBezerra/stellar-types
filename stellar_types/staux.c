@@ -66,7 +66,6 @@ static int __staux_validator(lua_State *L, const char* type_value) {
     } else if (strcmp(type_value, STELLAR_TFUNCTION) == 0){
         return lua_type(L, -2) == LUA_TFUNCTION;
     } else if (strcmp(type_value, STELLAR_TARRAY) == 0) {
-        /* Check if all keys are integers (array-like table) */
         lua_pushnil(L);
         int is_array = TRUE;
         while (lua_next(L, -3)) {
@@ -78,7 +77,7 @@ static int __staux_validator(lua_State *L, const char* type_value) {
                 lua_pop(L, 2);
                 break;
             }
-            lua_pop(L, 1); /* remove value, keep key for next iteration */
+            lua_pop(L, 1);
         }
         return is_array;
     } else if (strcmp(type_value, STELLAR_TUSERDATA) == 0) {

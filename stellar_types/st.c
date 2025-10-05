@@ -1,12 +1,9 @@
 #include "st.h"
 
 int st_create_type(lua_State *L) {
-    luaL_checktype(L, 1, LUA_TTABLE); /* check the schema passed to the constructor */
-
-    lua_newtable(L); /* class table */
+    lua_newtable(L);
     int class_index = lua_gettop(L);
 
-    /* methods table */
     lua_newtable(L);
     int methods_index = lua_gettop(L);
 
@@ -23,27 +20,24 @@ int st_create_type(lua_State *L) {
         if (lua_type(L, -1) == LUA_TSTRING) {
             const char* type_value = lua_tostring(L, -1);
             if (strcmp(type_value, STELLAR_TANY) == 0) {
-                /* Skip adding a closure for STELLAR_TANY */
                 lua_pop(L, 2);
                 continue;
             }
             lua_pushstring(L, type_value);
         } else if (lua_type(L, -1) == LUA_TTABLE) {
-            lua_pushvalue(L, -1); /* push the metatable */
+            lua_pushvalue(L, -1);
         } else {
             luaL_error(L, "Type specification missing or invalid for field '%s': %s", name, lua_typename(L, lua_type(L, -1)));
         }
         lua_pop(L, 1);
         lua_getfield(L, -2, STELLAR_ERROR_OPTION);
-        
         lua_pushcclosure(L, staux_register_type, 2);
-
         lua_setfield(L, validators_index, name);
 
         lua_pop(L, 1);
     }
 
-    lua_newtable(L); /* __extra_validators table */
+    lua_newtable(L);
     int extra_validators_index = lua_gettop(L);
 
     lua_newtable(L);
@@ -69,12 +63,11 @@ int st_create_type(lua_State *L) {
         lua_pop(L, 2);
     }
 
-    /* set methods table as metatable for class table */
-    lua_newtable(L); /* metatable for class */
+    lua_newtable(L);
     lua_pushvalue(L, methods_index);
     lua_setfield(L, -2, STELLAR_INDEX);
     lua_setmetatable(L, class_index);
-    /* set schema as __validators field in class table */
+
     lua_pushvalue(L, validators_index);
     lua_setfield(L, class_index, STELLAR_VALIDATORS);
     lua_pushcfunction(L, stm_newindex);

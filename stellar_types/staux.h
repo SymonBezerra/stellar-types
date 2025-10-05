@@ -9,6 +9,8 @@
 
 #include "types.h"
 
+/* Auxiliary functions to be called inside C functions */
+
 #define staux_typew(type, field) \
     lua_getfield(L, LUA_REGISTRYINDEX, "st"); \
     lua_getfield(L, -1, "warnings"); \
@@ -67,7 +69,6 @@
 #define staux_confirm() \
     lua_pushboolean(L, TRUE);
 
-/* Auxiliary functions to be called inside C functions */
 
 int staux_register_type(lua_State *L);
 static int __staux_validator(lua_State *L, const char* type_value);
