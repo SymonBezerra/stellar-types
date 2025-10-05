@@ -6,8 +6,10 @@ int staux_register_type(lua_State *L) {
     if (lua_type(L, lua_upvalueindex(1)) == LUA_TSTRING) {
         int valid = __staux_validator(L, field_type);
         if (valid < 0) {
+            staux_utypeerr(field_type, field_name);
             staux_utypew(field_type, field_name);
         } else if (valid == 0) {
+            staux_typeerr(field_type, field_name);
             staux_typew(field_type, field_name);
         }
     } else if (lua_type(L, lua_upvalueindex(1)) == LUA_TTABLE) {
@@ -25,10 +27,12 @@ int staux_register_type(lua_State *L) {
         }
         if (!is_array) {
             if (!lua_getmetatable(L, -2)) {
+                staux_ctypeerr("Expected specific object (table with metatable) for field", field_name);
                 staux_ctypew("Expected specific object (table with metatable) for field", field_name);
             }
             else {
                 if (lua_topointer(L, -1) != lua_topointer(L, lua_upvalueindex(1))) {
+                    staux_ctypeerr("Wrong type for field", field_name);
                     staux_ctypew("Wrong type for field", field_name);
                 } else {
                     staux_confirm();
@@ -41,6 +45,7 @@ int staux_register_type(lua_State *L) {
             if (valid > 0) {
                 staux_confirm();
             } else {
+                staux_typeerr(STELLAR_TARRAY, field_name);
                 staux_typew(STELLAR_TARRAY, field_name);
             }
         }
@@ -61,18 +66,12 @@ static int __staux_validator(lua_State *L, const char* type_value) {
     } else if (strcmp(type_value, STELLAR_TFUNCTION) == 0){
         return lua_type(L, -2) == LUA_TFUNCTION;
     } else if (strcmp(type_value, STELLAR_TARRAY) == 0) {
-        /*
-            if (lua_type(L, -2) != LUA_TTABLE) {
-                staux_typew("Expected an array (table) for field", field_name);
-            }
-        */
         /* Check if all keys are integers (array-like table) */
         lua_pushnil(L);
         int is_array = TRUE;
         while (lua_next(L, -3)) {
             if (lua_type(L, -2) != LUA_TNUMBER || lua_tointeger(L, -2) != lua_tonumber(L, -2)) {
                 is_array = FALSE;
-                /* fprintf(stderr, "Expected array (table with integer keys) for field '%s'", field_name); */
             }
             if (!is_array) {
                 lua_pushboolean(L, FALSE);
