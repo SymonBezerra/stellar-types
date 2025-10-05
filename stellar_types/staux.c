@@ -2,73 +2,86 @@
 
 int staux_register_type(lua_State *L) {
     const char* field_name = lua_tostring(L, -1);
+    const char* field_type = lua_tostring(L, lua_upvalueindex(1));
     if (lua_type(L, lua_upvalueindex(1)) == LUA_TSTRING) {
-        const char* type_value = lua_tostring(L, lua_upvalueindex(1));
-        if (strcmp(type_value, STELLAR_TSTRING) == 0) {
-            if (lua_type(L, -2) != LUA_TSTRING) {
-                staux_fielderror("Expected a string for field", field_name);
-            } else {
-                staux_confirm();
-            }
-        } else if (strcmp(type_value, STELLAR_TNUMBER) == 0) {
-            if (lua_type(L, -2) != LUA_TNUMBER) {
-                staux_fielderror("Expected a number for field", field_name);
-            } else {
-                staux_confirm();
-            }
-        } else if (strcmp(type_value, STELLAR_TBOOLEAN) == 0) {
-            if (lua_type(L, -2) != LUA_TBOOLEAN) {
-                staux_fielderror("Expected a boolean for field", field_name);
-            } else {
-                staux_confirm();
-            }
-        } else if (strcmp(type_value, STELLAR_TINTEGER) == 0) {
-            if (lua_type(L, -2) != LUA_TNUMBER || lua_tointeger(L, -2) != lua_tonumber(L, -2)) {
-                staux_fielderror("Expected an integer for field", field_name);
-            } else {
-                staux_confirm();
-            }
-        } else if (strcmp(type_value, STELLAR_TFLOAT) == 0) {
-            if (lua_type(L, -2) != LUA_TNUMBER || lua_tointeger(L, -2) == lua_tonumber(L, -2)) {
-                staux_fielderror("Expected a float (decimal) for field", field_name);
-            } else {
-                staux_confirm();
-            }
-        } else if (strcmp(type_value, STELLAR_TARRAY) == 0) {
-            if (lua_type(L, -2) != LUA_TTABLE) {
-                staux_fielderror("Expected an array (table) for field", field_name);
-            }
-            /* Check if all keys are integers (array-like table) */
-            lua_pushnil(L);
-            int is_array = TRUE;
-            while (lua_next(L, -3)) {
-                if (lua_type(L, -2) != LUA_TNUMBER || lua_tointeger(L, -2) != lua_tonumber(L, -2)) {
-                    is_array = FALSE;
-                    fprintf(stderr, "Expected array (table with integer keys) for field '%s'", field_name);
-                }
-                if (!is_array) {
-                    lua_pushboolean(L, FALSE);
-                    lua_pop(L, 2);
-                    break;
-                }
-                lua_pop(L, 1); /* remove value, keep key for next iteration */
-            }
-            if (is_array) {
-                staux_confirm();
-            }
-        } else {
-            fprintf(stderr, "Unsupported type \'%s\' for field in type \'%s\'", type_value, field_name);
+        int valid = staux_validator(L, field_type);
+        if (valid < 0) {
+            staux_utypew(field_type, field_name);
+        } else if (valid == 0) {
+            staux_typew(field_type, field_name);
         }
     } else if (lua_type(L, lua_upvalueindex(1)) == LUA_TTABLE) {
-        if (lua_getmetatable(L, -2) == 0) {
-            staux_fielderror("Expected an object (table with metatable) for field", field_name);
+        lua_pushvalue(L, -2);
+        lua_pushvalue(L, lua_upvalueindex(1));
+        lua_pushnil(L);
+        int is_array = TRUE;
+        while (lua_next(L, -2) != 0) {
+            if (lua_type(L, -2) != LUA_TNUMBER || lua_tointeger(L, -2) != lua_tonumber(L, -2)) {
+                is_array = FALSE;
+                lua_pop(L, 2); 
+                break;
+            }
+            lua_pop(L, 1); 
         }
-        else if (!lua_rawequal(L, -1, lua_upvalueindex(1))) {
-            staux_fielderror("Wrong type for field", field_name);
-        } else {
-            staux_confirm();
+        if (!is_array) {
+            printf("%p\n", lua_topointer(L, -2));
+            if (!lua_getmetatable(L, -2)) {
+                staux_ctypew("Expected specific object (table with metatable) for field", field_name);
+            }
+            else {
+                if (lua_topointer(L, -1) != lua_topointer(L, lua_upvalueindex(1))) {
+                    staux_ctypew("Wrong type for field", field_name);
+                } else {
+                    staux_confirm();
+                }
+            }
+            lua_pop(L, 1); 
         }
-        lua_pop(L, 1);
+        else {
+            int valid = staux_validator(L, field_type);
+            if (valid > 0) {
+                staux_confirm();
+            } else {
+                staux_typew(STELLAR_TARRAY, field_name);
+            }
+        }
+        lua_pop(L, 1); 
     }
     return 1;
+}
+
+static int __staux_validator(lua_State *L, const char* type_value) {
+    if (strcmp(type_value, STELLAR_TSTRING) == 0) {
+        return lua_type(L, -2) == LUA_TSTRING;
+    } else if (strcmp(type_value, STELLAR_TNUMBER) == 0) {
+        return lua_type(L, -2) == LUA_TNUMBER;
+    } else if (strcmp(type_value, STELLAR_TBOOLEAN) == 0) {
+        return lua_type(L, -2) == LUA_TBOOLEAN;
+    } else if (strcmp(type_value, STELLAR_TINTEGER) == 0) {
+        return lua_type(L, -2) == LUA_TNUMBER && lua_tointeger(L, -2) == lua_tonumber(L, -2);
+    } else if (strcmp(type_value, STELLAR_TARRAY) == 0) {
+        /*
+            if (lua_type(L, -2) != LUA_TTABLE) {
+                staux_typew("Expected an array (table) for field", field_name);
+            }
+        */
+        /* Check if all keys are integers (array-like table) */
+        lua_pushnil(L);
+        int is_array = TRUE;
+        while (lua_next(L, -3)) {
+            if (lua_type(L, -2) != LUA_TNUMBER || lua_tointeger(L, -2) != lua_tonumber(L, -2)) {
+                is_array = FALSE;
+                /* fprintf(stderr, "Expected array (table with integer keys) for field '%s'", field_name); */
+            }
+            if (!is_array) {
+                lua_pushboolean(L, FALSE);
+                lua_pop(L, 2);
+                break;
+            }
+            lua_pop(L, 1); /* remove value, keep key for next iteration */
+        }
+        return is_array;
+    } else {
+        return -1; /* Unknown type */
+    }
 }

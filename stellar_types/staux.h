@@ -10,11 +10,32 @@
 
 #include "types.h"
 
-#define staux_fielderror(msg, field) \
+#define staux_utypew(msg, field) \
     lua_getfield(L, LUA_REGISTRYINDEX, "st"); \
     lua_getfield(L, -1, "warnings"); \
     if ((lua_type(L, -1) == LUA_TBOOLEAN && lua_toboolean(L, -1)) || lua_type(L, -1) == LUA_TNIL) { \
         fprintf(stderr, "%s: %s, '%s'\n", \
+            STELLAR_WARNING, msg, field); \
+    } \
+    lua_pop(L, 2); \
+    lua_pushboolean(L, FALSE);
+
+#define staux_typew(type, field) \
+    lua_getfield(L, LUA_REGISTRYINDEX, "st"); \
+    lua_getfield(L, -1, "warnings"); \
+    if ((lua_type(L, -1) == LUA_TBOOLEAN && lua_toboolean(L, -1)) || lua_type(L, -1) == LUA_TNIL) { \
+        fprintf(stderr, "%s: Expected %s for field \'%s\'\n", \
+            STELLAR_WARNING, type, field); \
+    } \
+    lua_pop(L, 2); \
+    lua_pushboolean(L, FALSE);
+
+
+#define staux_ctypew(msg, field) \
+    lua_getfield(L, LUA_REGISTRYINDEX, "st"); \
+    lua_getfield(L, -1, "warnings"); \
+    if ((lua_type(L, -1) == LUA_TBOOLEAN && lua_toboolean(L, -1)) || lua_type(L, -1) == LUA_TNIL) { \
+        fprintf(stderr, "%s: %s, \'%s\'\n", \
             STELLAR_WARNING, msg, field); \
     } \
     lua_pop(L, 2); \
@@ -26,5 +47,6 @@
 /* Auxiliary functions to be called inside C functions */
 
 int staux_register_type(lua_State *L);
+static int __staux_validator(lua_State *L, const char* type_value);
 
 #endif

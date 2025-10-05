@@ -8,7 +8,7 @@ MyType = types.create_type({
         ['validation'] = function(v) return #v > 0 end
     },
     ['value'] = {
-        ['type'] = 'float',
+        ['type'] = 'number',
         ['validation'] = function(v) return v > 0 end
     },
     ['active'] = {
@@ -48,6 +48,15 @@ print(instance.name) --> Example
 print(instance.value) --> 0.5
 print(instance.active) --> true
 print(instance.array) --> {1, 2, 3, 4}
+
+print(MyType)
+
+false_instance = {
+    name = 'Nested Example',
+    value = 1.0,
+    active = false,
+    array = {5, 6, 7, 8}
+}
 
 nested_instance = NestedType:new({
     description = "A nested instance",
