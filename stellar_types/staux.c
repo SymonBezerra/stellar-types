@@ -4,7 +4,7 @@ int staux_register_type(lua_State *L) {
     const char* field_name = lua_tostring(L, -1);
     const char* field_type = lua_tostring(L, lua_upvalueindex(1));
     if (lua_type(L, lua_upvalueindex(1)) == LUA_TSTRING) {
-        int valid = staux_validator(L, field_type);
+        int valid = __staux_validator(L, field_type);
         if (valid < 0) {
             staux_utypew(field_type, field_name);
         } else if (valid == 0) {
@@ -38,7 +38,7 @@ int staux_register_type(lua_State *L) {
             lua_pop(L, 1); 
         }
         else {
-            int valid = staux_validator(L, field_type);
+            int valid = __staux_validator(L, field_type);
             if (valid > 0) {
                 staux_confirm();
             } else {
