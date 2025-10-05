@@ -24,7 +24,6 @@ int staux_register_type(lua_State *L) {
             lua_pop(L, 1); 
         }
         if (!is_array) {
-            printf("%p\n", lua_topointer(L, -2));
             if (!lua_getmetatable(L, -2)) {
                 staux_ctypew("Expected specific object (table with metatable) for field", field_name);
             }
