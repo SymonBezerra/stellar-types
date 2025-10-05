@@ -41,16 +41,17 @@ int staux_register_type(lua_State *L) {
             /* Check if all keys are integers (array-like table) */
             lua_pushnil(L);
             int is_array = TRUE;
-            while (lua_next(L, -4)) {
+            while (lua_next(L, -3)) {
                 if (lua_type(L, -2) != LUA_TNUMBER || lua_tointeger(L, -2) != lua_tonumber(L, -2)) {
                     is_array = FALSE;
                     fprintf(stderr, "Expected array (table with integer keys) for field '%s'", field_name);
                 }
-                lua_pop(L, 1); /* remove value, keep key for next iteration */
                 if (!is_array) {
                     lua_pushboolean(L, FALSE);
+                    lua_pop(L, 2);
                     break;
                 }
+                lua_pop(L, 1); /* remove value, keep key for next iteration */
             }
             if (is_array) {
                 staux_confirm();
@@ -65,9 +66,9 @@ int staux_register_type(lua_State *L) {
         else if (!lua_rawequal(L, -1, lua_upvalueindex(1))) {
             staux_fielderror("Wrong type for field", field_name);
         } else {
-            lua_pop(L, 1);
             staux_confirm();
         }
+        lua_pop(L, 1);
     }
     return 1;
 }

@@ -13,14 +13,26 @@ MyType = types.create_type({
     },
     ['active'] = {
         ['type'] = 'boolean'
+    },
+    ['array'] = {
+        ['type'] = 'array',
+        ['validation'] = function (v)
+            for i, n in ipairs(v) do
+                if type(n) ~= 'number' then
+                    return false
+                end
+            end
+            return true
+        end
     }
 })
 
 
 instance = MyType:new({
     name = 'Example',
-    value = -1,
-    active = true
+    value = 0.5,
+    active = true,
+    array = {1, 2, 3, 4}
 })
 
 NestedType = types.create_type({
@@ -35,6 +47,7 @@ NestedType = types.create_type({
 print(instance.name) --> Example
 print(instance.value) --> 0.5
 print(instance.active) --> true
+print(instance.array) --> {1, 2, 3, 4}
 
 nested_instance = NestedType:new({
     description = "A nested instance",

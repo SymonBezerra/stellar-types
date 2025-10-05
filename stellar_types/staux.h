@@ -21,7 +21,7 @@
     lua_pushboolean(L, FALSE);
 
 #define staux_confirm() \
-    lua_pushboolean(L, TRUE); \
+    lua_pushboolean(L, TRUE);
 
 /* Auxiliary functions to be called inside C functions */
 
