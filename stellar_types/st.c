@@ -33,9 +33,10 @@ int st_create_type(lua_State *L) {
         } else {
             luaL_error(L, "Type specification missing or invalid for field '%s': %s", name, lua_typename(L, lua_type(L, -1)));
         }
-
         lua_pop(L, 1);
-        lua_pushcclosure(L, staux_register_type, 1);
+        lua_getfield(L, -2, STELLAR_ERROR_OPTION);
+        
+        lua_pushcclosure(L, staux_register_type, 2);
 
         lua_setfield(L, validators_index, name);
 
@@ -44,6 +45,9 @@ int st_create_type(lua_State *L) {
 
     lua_newtable(L); /* __extra_validators table */
     int extra_validators_index = lua_gettop(L);
+
+    lua_newtable(L);
+    int error_index = lua_gettop(L);
 
     lua_pushnil(L);
     while (lua_next(L, 1) != 0) {
@@ -55,21 +59,30 @@ int st_create_type(lua_State *L) {
         } else if (!lua_isnil(L, -1)) {
             luaL_error(L, "Validation for field \'%s\' is not a function", name);
         }
+        lua_pop(L, 1);
+
+        lua_getfield(L, -1, STELLAR_ERROR_OPTION);
+        if (lua_toboolean(L, -1)) {
+            lua_pushvalue(L, -1);
+            lua_setfield(L, error_index, name);
+        }
         lua_pop(L, 2);
     }
 
     /* set methods table as metatable for class table */
     lua_newtable(L); /* metatable for class */
     lua_pushvalue(L, methods_index);
-    lua_setfield(L, -2, "__index");
+    lua_setfield(L, -2, STELLAR_INDEX);
     lua_setmetatable(L, class_index);
     /* set schema as __validators field in class table */
     lua_pushvalue(L, validators_index);
-    lua_setfield(L, class_index, "__validators");
+    lua_setfield(L, class_index, STELLAR_VALIDATORS);
     lua_pushcfunction(L, stm_newindex);
-    lua_setfield(L, class_index, "__newindex");
+    lua_setfield(L, class_index, STELLAR_NEWINDEX);
     lua_pushvalue(L, extra_validators_index);
-    lua_setfield(L, class_index, "__extra_validators");
+    lua_setfield(L, class_index, STELLAR_EXTRA_VALIDATORS);
+    lua_pushvalue(L, error_index);
+    lua_setfield(L, class_index, STELLAR_ON_VALIDATE_ERROR);
     lua_pushvalue(L, class_index);
 
     return 1;

@@ -10,6 +10,8 @@
 
 #include "types.h"
 
+/* Stellar Types module functions */
+
 #define stm_setnil(L) __stm_setfield(L, FALSE); return 0;
 #define stm_setvalue(L) __stm_setfield(L, TRUE); return 0;
 
@@ -20,16 +22,18 @@
         fprintf(stderr, "%s: %s, \'%s\'\n", STELLAR_WARNING, msg, field); \
         return 0; \
     } \
-    lua_pop(L, 2); \
+    lua_pop(L, 2);
 
 #define stm_error(msg, field) \
     lua_getfield(L, LUA_REGISTRYINDEX, "st"); \
     lua_getfield(L, -1, "user_error"); \
-    if ((lua_type(L, -1) == LUA_TBOOLEAN && lua_toboolean(L, -1))) { \
-        luaL_error(L, "%s: %s, \'%s\'\n", STELLAR_WARNING, msg, field); \
-    }
+    lua_getfield(L, -5, "__on_validate_error"); \
+    lua_getfield(L, -1, field); \
+    if (lua_type(L, -3) == LUA_TBOOLEAN && lua_toboolean(L, -3) || lua_toboolean(L, -1)) { \
+        luaL_error(L, "%s: %s, \'%s\'\n", STELLAR_ERROR, msg, field); \
+    } \
+    lua_pop(L, 3);
 
-/* Stellar Types module functions */
 
 int stm_new(lua_State *L);
 int stm_newindex(lua_State *L);

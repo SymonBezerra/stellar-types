@@ -49,7 +49,7 @@ int stm_newindex(lua_State *L) {
 
     lua_getfield(L, -1, "__extra_validators");
     lua_getfield(L, -1, key);
-        if (!lua_isnil(L, -1)) {
+    if (!lua_isnil(L, -1)) {
         lua_pushvalue(L, 3);
         lua_call(L, 1, 1);
         if (!lua_isboolean(L, -1)) {

@@ -1,0 +1,1 @@
+# Stellar Types - A Pydantic inspired library for Lua tables

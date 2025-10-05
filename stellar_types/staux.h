@@ -23,14 +23,15 @@
 #define staux_typeerr(type, field) \
     lua_getfield(L, LUA_REGISTRYINDEX, "st"); \
     lua_getfield(L, -1, "error"); \
-    if ((lua_type(L, -1) == LUA_TBOOLEAN && lua_toboolean(L, -1))) { \
-        luaL_error(L, "%s: Expected %s for field \'%s\'\n", STELLAR_WARNING, type, field); \
+    if (lua_type(L, -1) == LUA_TBOOLEAN && lua_toboolean(L, -1) || lua_toboolean(L, lua_upvalueindex(2))) { \
+        luaL_error(L, "%s: Expected %s for field \'%s\'\n", STELLAR_ERROR, type, field); \
     } \
+    lua_pop(L, 1);
 
 #define staux_utypew(msg, field) \
     lua_getfield(L, LUA_REGISTRYINDEX, "st"); \
     lua_getfield(L, -1, "warnings"); \
-    if ((lua_type(L, -1) == LUA_TBOOLEAN && lua_toboolean(L, -1)) || lua_type(L, -1) == LUA_TNIL) { \
+    if (lua_type(L, -1) == LUA_TBOOLEAN && lua_toboolean(L, -1) || lua_type(L, -1) == LUA_TNIL) { \
         fprintf(stderr, "%s: %s, '%s'\n", \
             STELLAR_WARNING, msg, field); \
     } \
@@ -40,9 +41,11 @@
 #define staux_utypeerr(msg, field) \
     lua_getfield(L, LUA_REGISTRYINDEX, "st"); \
     lua_getfield(L, -1, "error"); \
-    if ((lua_type(L, -1) == LUA_TBOOLEAN && lua_toboolean(L, -1))) { \
-        luaL_error(L, "%s: %s, '%s'\n", STELLAR_WARNING, msg, field); \
-    }
+    printf("%d\n", lua_toboolean(L, lua_upvalueindex(2))); \
+    if (lua_type(L, -1) == LUA_TBOOLEAN && lua_toboolean(L, -1) || lua_toboolean(L, lua_upvalueindex(2))) { \
+        luaL_error(L, "%s: %s, '%s'\n", STELLAR_ERROR, msg, field); \
+    } \
+    lua_pop(L, 1);
 
 
 #define staux_ctypew(msg, field) \

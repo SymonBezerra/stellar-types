@@ -11,10 +11,11 @@ MyType = types.create_type({
     },
     ['value'] = {
         ['type'] = 'number',
-        ['validation'] = function(v) return v > 0 end
+        ['validation'] = function(v) return v > 0 end,
+        ['error'] = true
     },
     ['active'] = {
-        ['type'] = 'boolean'
+        ['type'] = 'boolean',
     },
     ['array'] = {
         ['type'] = 'array',
@@ -25,7 +26,7 @@ MyType = types.create_type({
                 end
             end
             return true
-        end
+        end,
     },
     ['callback'] = {
         ['type'] = 'function',
@@ -36,7 +37,7 @@ MyType = types.create_type({
 
 instance = MyType:new({
     name = 'Example',
-    value = 0.5,
+    value = -0.5,
     active = true,
     array = {'1'},
     callback = function(k, v) return string.format("%s %s", k, v) end
