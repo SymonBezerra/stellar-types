@@ -4,10 +4,9 @@
 #define FALSE 0
 #define TRUE 1
 
-#define STELLAR_WARNING "WARNING"
+#define STELLAR_WARNING "STELLAR_TYPES_WARNING"
 
 #define STELLAR_TANY "any" /* not implemented */
-/* todo: implement composite types (?) */
 #define STELLAR_TBOOLEAN "boolean"
 #define STELLAR_TFLOAT "float"
 #define STELLAR_TINTEGER "integer"

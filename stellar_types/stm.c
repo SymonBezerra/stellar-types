@@ -40,9 +40,14 @@ int stm_newindex(lua_State *L) {
     if (lua_isfunction(L, -1)) {
         lua_pushvalue(L, 3); /* value to validate */
         lua_pushvalue(L, 2); /* field name */
-        lua_call(L, 2, 0);   /* call validator */
+        lua_call(L, 2, 1);   /* call validator */
+        if (!lua_toboolean(L, -1)) {
+            stm_error("Validation failed for field", key);
+            __stm_setfield(L);
+            return 0; /* validation failed, error already reported */
+        }
     }
-    lua_pop(L, 1); /* remove validator or nil */
+    lua_pop(L, 2); /* remove validator and its result */
     lua_pushvalue(L, -1);
 
     lua_getfield(L, -1, "__extra_validators");
@@ -50,22 +55,17 @@ int stm_newindex(lua_State *L) {
         if (!lua_isnil(L, -1)) {
         lua_pushvalue(L, 3);
         lua_call(L, 1, 1);
-        if (!lua_toboolean(L, -1)) {
-            fprintf(stderr, "%s, Extra validation failed for field '%s'\n", STELLAR_WARNING, key);
-            stm_setnil(L);
-        }
     }
     lua_pop(L, 2); /* remove __extra_validators and its field value (or nil) */
-
-    lua_pushvalue(L, 2); /* key */
-    lua_pushvalue(L, 3); /* value */
-    lua_rawset(L, 1);  /* instance[key] = value */
-
-    return 0;
+    __stm_setfield(L);
 }
 
-void __stm_setnil(lua_State *L) {
+static void __stm_setfield(lua_State *L) {
     lua_pushvalue(L, 2); /* key */
-    lua_pushnil(L);
+    if (lua_toboolean(L, -2)) {
+        lua_pushvalue(L, 3); /* value */
+    } else {
+        lua_pushnil(L);
+    }
     lua_rawset(L, 1);  /* instance[key] = nil */
 }
