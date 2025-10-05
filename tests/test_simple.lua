@@ -153,6 +153,35 @@ nested2 = NestedType:new({
     nested = primitive2
 })
 
+DictType = types.create_type({
+    obj = {
+        type = {},
+        validation = function(value)
+            return value['key'] ~= nil and type(value['key']) == 'number' and value['key'] > 0
+        end
+    }
+})
+
+dict = DictType:new({
+    obj = {key = 5}
+})
+
+-- dict2 = DictType:new({
+--     dict = {key = -1}
+-- })
+
+-- dict3 = DictType:new({
+--     dict = {key = 'value'}
+-- })
+-- dict4 = DictType:new({
+--     dict = {another_key = 10}
+-- })
+
+-- assert(dict.dict ~= nil)
+-- assert(dict2.dict == nil)
+-- assert(dict3.dict == nil)
+-- assert(dict4.dict == nil)
+
 assert(nested.nested ~= nil)
 assert(nested2.nested == nil)
 

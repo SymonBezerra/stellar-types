@@ -41,7 +41,7 @@ Each table attribute is a string-indexed table with a few fields:
     + `integer`
     + `boolean`
     + `array` (integer-indexed table)
-    + `object` (string-indexed table)
+    + directly-passed Lua tables
     + `function`
     + `userdata`
     + `any`
@@ -82,9 +82,51 @@ ArrayType = types.create_type({
 })
 ```
 
-## Validating object-like tables
+## Validating string-indexed tables
 
-Object-like tables are validated via their metatable (inheritance), though other validations can be user-defined.
+String-indexed tables are validated via their metatable (inheritance). You may use a StellarType or a regular table indexed by strings (dictionary). If the table is a regular dictionary, no metatable will be validated, which it means only user-defined validations will be performed.
+
+```lua
+
+PrimitiveType = types.create_type({
+    attr = {
+        type = 'string',
+        validation = function(value)
+            return #value > 0
+        end
+    }
+})
+
+primitive = PrimitiveType:new({
+    attr = "value"
+})
+
+NestedType = types.create_type({
+    nested = {
+        type = PrimitiveType,
+        validation = function(value)
+            return #value.attr < 10
+        end
+    }
+})
+
+nested = NestedType:new({
+    nested = primitive
+})
+
+DictType = types.create_type({
+    dict = {
+        type = {}, -- regular dictionary
+        validation = function(v)
+            return v.attr ~= nil
+        end
+    }
+})
+
+dictionary = DictType:new({
+    dict = { attr = 'any' }
+})
+```
 
 ## Composite types
 
@@ -144,3 +186,7 @@ lua.globals()['complex'] = list()
 
 lua.execute('dofile("./userdata_example.lua")')
 ```
+
+## Integration with Python
+
+As shown in the snippet above, you must use `lupa` and `ctypes` to "hydrate" the StellarTypes library files with the Lua headers. Integration is thought for creating Lua config files and scripting, leaving Python as a more static code.

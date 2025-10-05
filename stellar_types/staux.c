@@ -39,6 +39,8 @@ int staux_register_type(lua_State *L) {
                 }
             }
             lua_pop(L, 1);
+        } else if (!lua_getmetatable(L, -2)) {
+            staux_confirm();
         }
         else {
             int valid = __staux_validator(L, field_type);
