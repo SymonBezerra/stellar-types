@@ -7,7 +7,7 @@ MyType = types.create_type({
     },
     ['value'] = {
         ['type'] = 'float',
-        ['validation'] = function(v) return v >= 0 end
+        ['validation'] = function(v) return v > 0 end
     },
     ['active'] = {
         ['type'] = 'boolean'
@@ -15,7 +15,7 @@ MyType = types.create_type({
 })
 
 instance = MyType:new({
-    name = "Example",
+    name = 'Example',
     value = 0.5,
     active = true
 })

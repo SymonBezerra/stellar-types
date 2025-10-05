@@ -14,7 +14,7 @@ int st_create_type(lua_State *L) {
     lua_setfield(L, methods_index, "new");
 
     lua_newtable(L);
-    int schema_index = lua_gettop(L);
+    int validators_index = lua_gettop(L);
 
     lua_pushnil(L);
     while (lua_next(L, 1) != 0) {
@@ -32,8 +32,25 @@ int st_create_type(lua_State *L) {
         lua_pop(L, 1);
         lua_pushcclosure(L, staux_register_type, 1);
 
-        lua_setfield(L, schema_index, name);
+        lua_setfield(L, validators_index, name);
+
         lua_pop(L, 1);
+    }
+
+    lua_newtable(L); /* __extra_validators table */
+    int extra_validators_index = lua_gettop(L);
+
+    lua_pushnil(L);
+    while (lua_next(L, 1) != 0) {
+        const char* name = lua_tostring(L, -2);
+        lua_getfield(L, -1, STELLAR_VALIDATION_OPTION);
+        if (lua_isfunction(L, -1)) {
+            lua_pushvalue(L, -1);
+            lua_setfield(L, extra_validators_index, name);
+        } else if (!lua_isnil(L, -1)) {
+            luaL_error(L, "Validation for field \'%s\' is not a function", name);
+        }
+        lua_pop(L, 2);
     }
 
     /* set methods table as metatable for class table */
@@ -42,10 +59,12 @@ int st_create_type(lua_State *L) {
     lua_setfield(L, -2, "__index");
     lua_setmetatable(L, class_index);
     /* set schema as __validators field in class table */
-    lua_pushvalue(L, schema_index);
+    lua_pushvalue(L, validators_index);
     lua_setfield(L, class_index, "__validators");
     lua_pushcfunction(L, stm_newindex);
     lua_setfield(L, class_index, "__newindex");
+    lua_pushvalue(L, extra_validators_index);
+    lua_setfield(L, class_index, "__extra_validators");
     lua_pushvalue(L, class_index);
 
     return 1;

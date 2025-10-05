@@ -36,15 +36,28 @@ int stm_newindex(lua_State *L) {
     /* Get the __validators table from the metatable */
     lua_getfield(L, -1, "__validators");
 
-    if (lua_istable(L, -1)) {
-        lua_getfield(L, -1, key);
-        if (lua_isfunction(L, -1)) {
-            lua_pushvalue(L, 3); /* value to validate */
-            lua_pushvalue(L, 2); /* field name */
-            lua_call(L, 2, 0);   /* call validator */
-        }
-        lua_pop(L, 1); /* remove validator or nil */
+    lua_getfield(L, -1, key);
+    if (lua_isfunction(L, -1)) {
+        lua_pushvalue(L, 3); /* value to validate */
+        lua_pushvalue(L, 2); /* field name */
+        lua_call(L, 2, 0);   /* call validator */
     }
+    lua_pop(L, 1); /* remove validator or nil */
+    lua_pushvalue(L, -1);
+
+    lua_getfield(L, -1, "__extra_validators");
+    lua_getfield(L, -1, key);
+        if (!lua_isnil(L, -1)) {
+        lua_pushvalue(L, 3);
+        lua_call(L, 1, 1);
+        if (lua_type(L, -1) != LUA_TBOOLEAN) {
+            luaL_error(L, "User-defined validation for field '%s' must return a boolean", key);
+        } else if (!lua_toboolean(L, -1)) {
+            luaL_error(L, "User-defined validation failed for field '%s'", key);
+        }
+    }
+    lua_pop(L, 1); /* remove __extra_validators and its field value (or nil) */
+
     lua_pushvalue(L, 2); /* key */
     lua_pushvalue(L, 3); /* value */
     lua_rawset(L, 1);  /* instance[key] = value */
