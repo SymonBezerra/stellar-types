@@ -42,7 +42,6 @@ int stm_newindex(lua_State *L) {
         lua_pushvalue(L, 2); /* field name */
         lua_call(L, 2, 1);   /* call validator */
         if (!lua_toboolean(L, -1)) {
-            __stm_setfield(L);
             return 0; /* validation failed, error already reported */
         }
     }
@@ -54,6 +53,12 @@ int stm_newindex(lua_State *L) {
         if (!lua_isnil(L, -1)) {
         lua_pushvalue(L, 3);
         lua_call(L, 1, 1);
+        printf("%s\n", luaL_typename(L, -1));
+        if (!lua_isboolean(L, -1)) {
+            stm_error("User-defined validation did not return a boolean for field", key);
+        } else if (!lua_toboolean(L, -1)) {
+            stm_error("User-defined validation failed for field", key);
+        }
     }
     lua_pop(L, 2); /* remove __extra_validators and its field value (or nil) */
     __stm_setfield(L);
@@ -62,10 +67,6 @@ int stm_newindex(lua_State *L) {
 
 static void __stm_setfield(lua_State *L) {
     lua_pushvalue(L, 2); /* key */
-    if (lua_toboolean(L, -2)) {
-        lua_pushvalue(L, 3); /* value */
-    } else {
-        lua_pushnil(L);
-    }
+    lua_pushvalue(L, 3); /* value */
     lua_rawset(L, 1);  /* instance[key] = nil */
 }

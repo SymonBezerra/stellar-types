@@ -12,6 +12,8 @@
 #define stm_setnil(L) __stm_setfield(L, FALSE); return 0;
 #define stm_setvalue(L) __stm_setfield(L, TRUE); return 0;
 
+#define stm_error(msg, field) fprintf(stderr, "%s: %s, \'%s\'\n", STELLAR_WARNING, msg, field); return 0;
+
 /* Stellar Types module functions */
 
 int stm_new(lua_State *L);
