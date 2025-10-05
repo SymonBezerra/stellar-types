@@ -76,7 +76,6 @@ static int __staux_validator(lua_State *L, const char* type_value) {
                 is_array = FALSE;
             }
             if (!is_array) {
-                lua_pushboolean(L, FALSE);
                 lua_pop(L, 2);
                 break;
             }
