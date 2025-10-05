@@ -2,6 +2,7 @@ types = require("stellar_types")
 
 -- types.warnings = false --> disable warnings
 -- types.error = true --> enable errors on validation failure
+-- types.user_error = true --> enable errors on user-defined validation failure
 
 MyType = types.create_type({
     ['name'] = {
@@ -37,7 +38,7 @@ instance = MyType:new({
     name = 'Example',
     value = 0.5,
     active = true,
-    array = {['1'] = 2},
+    array = {'1'},
     callback = function(k, v) return string.format("%s %s", k, v) end
 })
 

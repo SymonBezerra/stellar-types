@@ -54,8 +54,10 @@ int stm_newindex(lua_State *L) {
         lua_call(L, 1, 1);
         if (!lua_isboolean(L, -1)) {
             stm_error("User-defined validation did not return a boolean for field", key);
+            stm_warning("User-defined validation did not return a boolean for field", key);
         } else if (!lua_toboolean(L, -1)) {
             stm_error("User-defined validation failed for field", key);
+            stm_warning("User-defined validation failed for field", key);
         }
     }
     lua_pop(L, 2); /* remove __extra_validators and its field value (or nil) */
