@@ -1,3 +1,5 @@
+-- RUN test_userdata.py INSTEAD
+
 types = require("stellar_types")
 
 UDataType = types.create_type({
