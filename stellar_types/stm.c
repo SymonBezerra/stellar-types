@@ -53,7 +53,6 @@ int stm_newindex(lua_State *L) {
         if (!lua_isnil(L, -1)) {
         lua_pushvalue(L, 3);
         lua_call(L, 1, 1);
-        printf("%s\n", luaL_typename(L, -1));
         if (!lua_isboolean(L, -1)) {
             stm_error("User-defined validation did not return a boolean for field", key);
         } else if (!lua_toboolean(L, -1)) {
