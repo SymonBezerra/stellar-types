@@ -58,6 +58,7 @@ int stm_newindex(lua_State *L) {
     }
     lua_pop(L, 2); /* remove __extra_validators and its field value (or nil) */
     __stm_setfield(L);
+    return 0;
 }
 
 static void __stm_setfield(lua_State *L) {
