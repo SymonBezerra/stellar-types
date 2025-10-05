@@ -1,4 +1,8 @@
+import ctypes
+
 import lupa.lua53 as lupa
+
+ctypes.CDLL(lupa.__file__, mode=ctypes.RTLD_GLOBAL)
 
 lua = lupa.LuaRuntime()
 

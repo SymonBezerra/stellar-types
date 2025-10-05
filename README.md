@@ -132,7 +132,11 @@ print(instance.list) --> []
 Python code (must be called so `python` module can work via `lupa`):
 
 ```python
+import ctypes
+
 import lupa.lua53 as lupa
+
+ctypes.CDLL(lupa.__file__, mode=ctypes.RTLD_GLOBAL) # "hydrate" with Lua headers, dynamically
 
 lua = lupa.LuaRuntime()
 
