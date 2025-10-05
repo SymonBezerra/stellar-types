@@ -6,7 +6,7 @@ MyType = types.create_type({
         ['validation'] = function(v) return #v > 0 end
     },
     ['value'] = {
-        ['type'] = 'any',
+        ['type'] = 'integer',
         ['validation'] = function(v) return v > 0 end
     },
     ['active'] = {

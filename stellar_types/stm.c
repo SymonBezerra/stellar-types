@@ -42,7 +42,6 @@ int stm_newindex(lua_State *L) {
         lua_pushvalue(L, 2); /* field name */
         lua_call(L, 2, 1);   /* call validator */
         if (!lua_toboolean(L, -1)) {
-            stm_error("Validation failed for field", key);
             __stm_setfield(L);
             return 0; /* validation failed, error already reported */
         }
