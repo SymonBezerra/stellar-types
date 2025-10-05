@@ -58,6 +58,8 @@ static int __staux_validator(lua_State *L, const char* type_value) {
         return lua_type(L, -2) == LUA_TBOOLEAN;
     } else if (strcmp(type_value, STELLAR_TINTEGER) == 0) {
         return lua_type(L, -2) == LUA_TNUMBER && lua_tointeger(L, -2) == lua_tonumber(L, -2);
+    } else if (strcmp(type_value, STELLAR_TFUNCTION) == 0){
+        return lua_type(L, -2) == LUA_TFUNCTION;
     } else if (strcmp(type_value, STELLAR_TARRAY) == 0) {
         /*
             if (lua_type(L, -2) != LUA_TTABLE) {

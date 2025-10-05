@@ -24,6 +24,10 @@ MyType = types.create_type({
             end
             return true
         end
+    },
+    ['callback'] = {
+        ['type'] = 'function',
+        ['validation'] = function (v) return type(v('1')) == 'string' end
     }
 })
 
@@ -32,7 +36,8 @@ instance = MyType:new({
     name = 'Example',
     value = 0.5,
     active = true,
-    array = {1, 2, 3, 4}
+    array = {1, 2, 3, 4},
+    callback = function(k, v) return string.format("%s %s", k, v) end
 })
 
 NestedType = types.create_type({
@@ -48,6 +53,7 @@ print(instance.name) --> Example
 print(instance.value) --> 0.5
 print(instance.active) --> true
 print(instance.array) --> {1, 2, 3, 4}
+print(instance.callback) --> function
 
 print(MyType)
 
