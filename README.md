@@ -62,17 +62,7 @@ Config = types.create_type({
 
 ## Integration with Python
 
-The `stellar_types_python` module is intended to be used with the `lupa` Python library in the following way:
-
-```python
-import ctypes
-
-import lupa.lua53 as lupa
-
-ctypes.CDLL(lupa.__file__, mode=ctypes.RTLD_GLOBAL) # in order lupa.LuaRuntime shared objects as Lua headers
-
-lua = lupa.LuaRuntime()
-```
+The `stellar_types` module is intended to be used with the `lupa` Python library. It is already compiled to be hydrated by the `lupa` Lua headers.
 
 ## Validating array-like tables
 
@@ -122,7 +112,8 @@ Function values cannot be limited on what functionalities they may perform, i.e.
 While there is a way to validate Lua-defined userdata, there is no way to validate their static C types dynamically. However, the user-defined validation can work around this limitation of the interpreter:
 
 ```lua
-types = require("stellar_types_python") -- example with lupa
+-- example with lupa
+types = require("stellar_types")
 
 UserdataTypes = types.create_type({
     ['list'] = {
@@ -138,4 +129,16 @@ instance = UserdataTypes:new({
 })
 
 print(instance.list) --> []
+```
+
+Python code (must be called so `python` module can work via `lupa`):
+
+```python
+import lupa.lua53 as lupa
+
+lua = lupa.LuaRuntime()
+
+lua.globals()['complex'] = list()
+
+lua.execute('dofile("./userdata_example.lua")')
 ```

@@ -1,4 +1,4 @@
-types = require("stellar_types_python")
+types = require("stellar_types")
 
 UserdataTypes = types.create_type({
     ['list'] = {
