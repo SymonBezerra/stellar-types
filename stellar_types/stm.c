@@ -29,7 +29,6 @@ int stm_new(lua_State *L) {
 }
 
 int stm_newindex(lua_State *L) {
-    luaL_checktype(L, 1, LUA_TTABLE); /* instance table */
     const char *key = luaL_checkstring(L, 2);
 
     lua_getmetatable(L, 1);

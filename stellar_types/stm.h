@@ -1,6 +1,7 @@
 #ifndef STM_H
 #define STM_H
 
+#include <stdio.h>
 #include <string.h>
 
 #include <lua5.3/lua.h>

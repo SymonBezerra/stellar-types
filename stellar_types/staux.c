@@ -65,9 +65,9 @@ int staux_register_type(lua_State *L) {
         else if (!lua_rawequal(L, -1, lua_upvalueindex(1))) {
             staux_fielderror("Wrong type for field", field_name);
         } else {
+            lua_pop(L, 1);
             staux_confirm();
         }
-        lua_pop(L, 1);
     }
     return 1;
 }

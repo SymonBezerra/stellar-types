@@ -1,12 +1,14 @@
 types = require("stellar_types")
 
+-- types.warnings = false
+
 MyType = types.create_type({
     ['name'] = {
         ['type'] = 'string',
         ['validation'] = function(v) return #v > 0 end
     },
     ['value'] = {
-        ['type'] = 'any',
+        ['type'] = 'float',
         ['validation'] = function(v) return v > 0 end
     },
     ['active'] = {
