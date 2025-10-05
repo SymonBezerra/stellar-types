@@ -17,6 +17,7 @@
 /* for definition, STELLAR_TARRAY fields can be empty */
 #define STELLAR_TOBJECT "object"
 #define STELLAR_TFUNCTION "function"
+#define STELLAR_TUSERDATA "userdata"
 
 #define STELLAR_TYPE_OPTION "type"
 #define STELLAR_VALIDATION_OPTION "validation"

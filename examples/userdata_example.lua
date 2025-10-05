@@ -1,0 +1,16 @@
+types = require("stellar_types_python")
+
+UserdataTypes = types.create_type({
+    ['list'] = {
+        ['type'] = 'userdata',
+        ['validation'] = function(v)
+            return python.builtins.str(python.builtins.type(v)) == '<class \'list\'>'
+        end
+    } 
+})
+
+instance = UserdataTypes:new({
+    list = complex
+})
+
+print(instance.list)

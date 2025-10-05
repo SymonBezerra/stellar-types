@@ -81,6 +81,8 @@ static int __staux_validator(lua_State *L, const char* type_value) {
             lua_pop(L, 1); /* remove value, keep key for next iteration */
         }
         return is_array;
+    } else if (strcmp(type_value, STELLAR_TUSERDATA) == 0) {
+        return lua_type(L, -2) == LUA_TUSERDATA;
     } else {
         return -1; /* Unknown type */
     }
