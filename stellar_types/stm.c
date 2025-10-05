@@ -50,17 +50,22 @@ int stm_newindex(lua_State *L) {
         if (!lua_isnil(L, -1)) {
         lua_pushvalue(L, 3);
         lua_call(L, 1, 1);
-        if (lua_type(L, -1) != LUA_TBOOLEAN) {
-            luaL_error(L, "User-defined validation for field '%s' must return a boolean", key);
-        } else if (!lua_toboolean(L, -1)) {
-            luaL_error(L, "User-defined validation failed for field '%s'", key);
+        if (!lua_toboolean(L, -1)) {
+            fprintf(stderr, "%s, Extra validation failed for field '%s'\n", STELLAR_WARNING, key);
+            stm_setnil(L);
         }
     }
-    lua_pop(L, 1); /* remove __extra_validators and its field value (or nil) */
+    lua_pop(L, 2); /* remove __extra_validators and its field value (or nil) */
 
     lua_pushvalue(L, 2); /* key */
     lua_pushvalue(L, 3); /* value */
     lua_rawset(L, 1);  /* instance[key] = value */
 
     return 0;
+}
+
+void __stm_setnil(lua_State *L) {
+    lua_pushvalue(L, 2); /* key */
+    lua_pushnil(L);
+    lua_rawset(L, 1);  /* instance[key] = nil */
 }

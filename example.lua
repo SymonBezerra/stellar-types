@@ -14,9 +14,10 @@ MyType = types.create_type({
     }
 })
 
+
 instance = MyType:new({
     name = 'Example',
-    value = 0.5,
+    value = -1,
     active = true
 })
 
