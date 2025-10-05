@@ -12,6 +12,7 @@ MyType = types.create_type({
     ['value'] = {
         ['type'] = 'number',
         ['validation'] = function(v) return v > 0 end,
+        ['error'] = true
     },
     ['active'] = {
         ['type'] = 'boolean',

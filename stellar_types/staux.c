@@ -20,10 +20,10 @@ int staux_register_type(lua_State *L) {
         while (lua_next(L, -2) != 0) {
             if (lua_type(L, -2) != LUA_TNUMBER || lua_tointeger(L, -2) != lua_tonumber(L, -2)) {
                 is_array = FALSE;
-                lua_pop(L, 2); 
+                lua_pop(L, 2);
                 break;
             }
-            lua_pop(L, 1); 
+            lua_pop(L, 1);
         }
         if (!is_array) {
             if (!lua_getmetatable(L, -2)) {
@@ -38,18 +38,18 @@ int staux_register_type(lua_State *L) {
                     staux_confirm();
                 }
             }
-            lua_pop(L, 1); 
+            lua_pop(L, 1);
         }
         else {
             int valid = __staux_validator(L, field_type);
-            if (valid > 0) {
+            if (valid) {
                 staux_confirm();
             } else {
                 staux_typeerr(STELLAR_TARRAY, field_name);
                 staux_typew(STELLAR_TARRAY, field_name);
             }
         }
-        lua_pop(L, 1); 
+        lua_pop(L, 1);
     }
     return 1;
 }
@@ -66,6 +66,9 @@ static int __staux_validator(lua_State *L, const char* type_value) {
     } else if (strcmp(type_value, STELLAR_TFUNCTION) == 0){
         return lua_type(L, -2) == LUA_TFUNCTION;
     } else if (strcmp(type_value, STELLAR_TARRAY) == 0) {
+        if (lua_type(L, -2) != LUA_TTABLE) {
+            return FALSE;
+        }
         lua_pushnil(L);
         int is_array = TRUE;
         while (lua_next(L, -3)) {
