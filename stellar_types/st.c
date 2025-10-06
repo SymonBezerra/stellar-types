@@ -1,17 +1,18 @@
 #include "st.h"
 
 int st_create_type(lua_State *L) {
-    lua_newtable(L);
-    int class_index = lua_gettop(L);
 
     lua_newtable(L);
-    int methods_index = lua_gettop(L);
+    int instance_index = lua_gettop(L);
 
     lua_pushcfunction(L, stm_new);
-    lua_setfield(L, methods_index, "new");
+    lua_setfield(L, instance_index, "new");
 
     lua_newtable(L);
     int validators_index = lua_gettop(L);
+
+    lua_newtable(L);
+    int defaults_index = lua_gettop(L);
 
     lua_pushnil(L);
     while (lua_next(L, 1) != 0) {
@@ -67,19 +68,18 @@ int st_create_type(lua_State *L) {
     }
 
     lua_newtable(L);
-    lua_pushvalue(L, methods_index);
+    lua_pushvalue(L, instance_index);
     lua_setfield(L, -2, STELLAR_INDEX);
-    lua_setmetatable(L, class_index);
 
     lua_pushvalue(L, validators_index);
-    lua_setfield(L, class_index, STELLAR_VALIDATORS);
+    lua_setfield(L, instance_index, STELLAR_VALIDATORS);
     lua_pushcfunction(L, stm_newindex);
-    lua_setfield(L, class_index, STELLAR_NEWINDEX);
+    lua_setfield(L, instance_index, STELLAR_NEWINDEX);
     lua_pushvalue(L, extra_validators_index);
-    lua_setfield(L, class_index, STELLAR_EXTRA_VALIDATORS);
+    lua_setfield(L, instance_index, STELLAR_EXTRA_VALIDATORS);
     lua_pushvalue(L, error_index);
-    lua_setfield(L, class_index, STELLAR_ON_VALIDATE_ERROR);
-    lua_pushvalue(L, class_index);
+    lua_setfield(L, instance_index, STELLAR_ON_VALIDATE_ERROR);
+    lua_pushvalue(L, instance_index);
 
     return 1;
 }
