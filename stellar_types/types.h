@@ -15,7 +15,6 @@
 #define STELLAR_TSTRING "string"
 #define STELLAR_TARRAY "array"
 /* for definition, STELLAR_TARRAY fields can be empty */
-#define STELLAR_TOBJECT "object"
 #define STELLAR_TFUNCTION "function"
 #define STELLAR_TUSERDATA "userdata"
 

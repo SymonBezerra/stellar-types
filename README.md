@@ -7,7 +7,7 @@ types = require("stellar_types")
 
 Config = types.create_type({
     ['value'] = {
-        ['type'] = 'string'
+        ['type'] = types.STRING
     }
 })
 
@@ -36,22 +36,22 @@ types.user_error = true -- exception raising on user-defined validation failure
 Each table attribute is a string-indexed table with a few fields:
 
 1. `type`, where possible values are:
-    + `string`
-    + `number` (float)
-    + `integer`
-    + `boolean`
-    + `array` (integer-indexed table)
+    + `STRING`
+    + `NUMBER` (float)
+    + `INTEGER`
+    + `BOOLEAN`
+    + `ARRAY` (integer-indexed table)
     + directly-passed Lua tables
-    + `function`
-    + `userdata`
-    + `any`
+    + `FUNCTION`
+    + `USERDATA`
+    + `ANY`
 2. `validation`, a validation function that returns a boolean value
 3. `error`, a boolean value that triggers an exception if the `validation` callback returns a `false` value (must have `require('stellar_types').user_error = true` enabled)
 
 ```lua
 Config = types.create_type({
     ['value'] = {
-        ['type'] = 'string',
+        ['type'] = types.STRING,
         ['validation'] = function(v) return #v > 0 end,
         ['error'] = true
     }
@@ -69,7 +69,7 @@ You can define the subtype of the array table using the user-defined validation:
 ```lua
 ArrayType = types.create_type({
     ['arr'] = {
-        ['type'] = 'array',
+        ['type'] = types.ARRAY,
         ['validation'] = function (v)
             for i, n in ipairs(v) do
                 if type(n) ~= 'number' then
@@ -82,6 +82,8 @@ ArrayType = types.create_type({
 })
 ```
 
+In theory, you can pass a simple Lua table to the `type` parameter, however, if you must work with array-like tables, uses `types.ARRAY`.
+
 ## Validating string-indexed tables
 
 String-indexed tables are validated via their metatable (inheritance). You may use a StellarType or a regular table indexed by strings (dictionary). If the table is a regular dictionary, no metatable will be validated, which it means only user-defined validations will be performed.
@@ -90,14 +92,14 @@ String-indexed tables are validated via their metatable (inheritance). You may u
 
 PrimitiveType = types.create_type({
     attr = {
-        type = 'string',
+        type = types.STRING,
         validation = function(value)
             return #value > 0
         end
     }
 })
 
-primitive = PrimitiveType:new({
+primitive = PrimitiveTypetypes.STRING:new({
     attr = "value"
 })
 

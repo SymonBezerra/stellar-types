@@ -18,6 +18,9 @@ int st_create_type(lua_State *L) {
         const char* name = lua_tostring(L, -2);
         lua_getfield(L, -1, STELLAR_TYPE_OPTION);
         if (lua_type(L, -1) == LUA_TSTRING) {
+            if (!st_tcheck(lua_tostring(L, -1))) {
+                st_utypeerr(name, lua_tostring(L, -1));
+            }
             const char* type_value = lua_tostring(L, -1);
             if (strcmp(type_value, STELLAR_TANY) == 0) {
                 lua_pop(L, 2);
@@ -27,7 +30,7 @@ int st_create_type(lua_State *L) {
         } else if (lua_type(L, -1) == LUA_TTABLE) {
             lua_pushvalue(L, -1);
         } else {
-            luaL_error(L, "Type specification missing or invalid for field '%s': %s", name, lua_typename(L, lua_type(L, -1)));
+            st_itypeerr(name, lua_typename(L, lua_type(L, -1)));
         }
         lua_pop(L, 1);
         lua_getfield(L, -2, STELLAR_ERROR_OPTION);

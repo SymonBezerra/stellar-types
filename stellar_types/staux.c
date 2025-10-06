@@ -5,10 +5,7 @@ int staux_register_type(lua_State *L) {
     const char* field_type = lua_tostring(L, lua_upvalueindex(1));
     if (lua_type(L, lua_upvalueindex(1)) == LUA_TSTRING) {
         int valid = __staux_validator(L, field_type);
-        if (valid < 0) {
-            staux_utypeerr(field_type, field_name);
-            staux_utypew(field_type, field_name);
-        } else if (valid == 0) {
+        if (!valid) {
             staux_typeerr(field_type, field_name);
             staux_typew(field_type, field_name);
         }
@@ -25,12 +22,14 @@ int staux_register_type(lua_State *L) {
             }
             lua_pop(L, 1);
         }
-        if (!is_array) {
-            if (!lua_getmetatable(L, -2)) {
+        if (!is_array || lua_type(L, -2) != LUA_TTABLE) {
+            if (lua_type(L, -2) != LUA_TTABLE) {
+                staux_ctypeerr("Expected table for field", field_name);
+                staux_ctypew("Expected table for field", field_name);
+            } else if (!lua_getmetatable(L, -2)) {
                 staux_ctypeerr("Expected specific object (table with metatable) for field", field_name);
                 staux_ctypew("Expected specific object (table with metatable) for field", field_name);
-            }
-            else {
+            } else {
                 if (lua_topointer(L, -1) != lua_topointer(L, lua_upvalueindex(1))) {
                     staux_ctypeerr("Wrong type for field", field_name);
                     staux_ctypew("Wrong type for field", field_name);
@@ -86,7 +85,5 @@ static int __staux_validator(lua_State *L, const char* type_value) {
         return is_array;
     } else if (strcmp(type_value, STELLAR_TUSERDATA) == 0) {
         return lua_type(L, -2) == LUA_TUSERDATA;
-    } else {
-        return -1; /* Unknown type */
     }
 }

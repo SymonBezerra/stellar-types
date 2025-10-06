@@ -4,7 +4,7 @@ types = require("stellar_types")
 
 StrType = types.create_type({
     name = {
-        ['type'] = 'string',
+        ['type'] = types.STRING,
         ['validation'] = function(value)
             return #value > 3
         end
@@ -24,7 +24,7 @@ assert(str2.name == nil)
 
 NumberType = types.create_type({
     value = {
-        ['type'] = 'number',
+        ['type'] = types.NUMBER,
         ['validation'] = function(value)
             return value >= 0
         end
@@ -47,7 +47,7 @@ assert(number3.value == nil)
 
 IntegerType = types.create_type({
     value = {
-        ['type'] = 'integer',
+        ['type'] = types.INTEGER,
         ['validation'] = function(value)
             return value % 2 == 0
         end
@@ -70,7 +70,7 @@ assert(integer3.value == nil)
 
 BooleanType = types.create_type({
     logic_value = {
-        ['type'] = 'boolean',
+        ['type'] = types.BOOLEAN,
     }
 })
 
@@ -86,7 +86,7 @@ assert(boolean2.logic_value == false)
 
 ArrayType = types.create_type({
     data = {
-        ['type'] = 'array',
+        ['type'] = types.ARRAY,
         ['validation'] = function(value)
             if #value == 0 then
                 return false
@@ -121,7 +121,7 @@ assert(array3.data == nil)
 
 PrimitiveType = types.create_type({
     attr = {
-        type = 'string',
+        type = types.STRING,
         validation = function(value)
             return #value > 0
         end
@@ -166,28 +166,28 @@ dict = DictType:new({
     obj = {key = 5}
 })
 
--- dict2 = DictType:new({
---     dict = {key = -1}
--- })
+dict2 = DictType:new({
+    dict = {key = -1}
+})
 
--- dict3 = DictType:new({
---     dict = {key = 'value'}
--- })
--- dict4 = DictType:new({
---     dict = {another_key = 10}
--- })
+dict3 = DictType:new({
+    dict = {key = 'value'}
+})
+dict4 = DictType:new({
+    dict = {another_key = 10}
+})
 
--- assert(dict.dict ~= nil)
--- assert(dict2.dict == nil)
--- assert(dict3.dict == nil)
--- assert(dict4.dict == nil)
+assert(dict.obj ~= nil)
+assert(dict2.obj == nil)
+assert(dict3.obj == nil)
+assert(dict4.obj == nil)
 
 assert(nested.nested ~= nil)
 assert(nested2.nested == nil)
 
 FunctionType = types.create_type({
     func = {
-        type = 'function',
+        type = types.FUNCTION,
         validation = function(value)
             return debug.getinfo(value).nparams == 2
         end
