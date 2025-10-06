@@ -58,13 +58,13 @@ values = {
 for i = 1, #values do
     pcall(function()
         local v = values[i]
-        String({ name = v })
-        NumberType({ value = v })
-        IntegerType({ value = v })
-        BooleanType({ logic_value = v })
-        ArrayType({ data = v })
-        DictType({ dict = v })
-        FunctionType({ func = v })
+        String:new({ name = v })
+        NumberType:new({ value = v })
+        IntegerType:new({ value = v })
+        BooleanType:new({ logic_value = v })
+        ArrayType:new({ data = v })
+        DictType:new({ dict = v })
+        FunctionType:new({ func = v })
     end)
 end
 
