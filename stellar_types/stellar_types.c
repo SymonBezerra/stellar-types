@@ -8,9 +8,6 @@ int luaopen_stellar_types(lua_State *L) {
     luaL_newlib(L, functions);
 
     lua_pushvalue(L, -1);
-    lua_pushcfunction(L, stellar_types_newindex);
-    lua_pushstring(L, "__newindex");
-    lua_settable(L, -3);
 
     lua_pushstring(L, STELLAR_TANY);
     lua_setfield(L, -2, "ANY");
@@ -29,6 +26,15 @@ int luaopen_stellar_types(lua_State *L) {
     lua_pushstring(L, STELLAR_TUSERDATA);
     lua_setfield(L, -2, "USERDATA");
 
+    lua_newtable(L);
+    lua_setmetatable(L, -2);
+
+    lua_getmetatable(L, -1);
+    lua_pushcfunction(L, stellar_types_newindex);
+    lua_setfield(L, -2, STELLAR_NEWINDEX);
+
+    lua_pop(L, 1);
+
     lua_pushvalue(L, -1);
     lua_setfield(L, LUA_REGISTRYINDEX, "st");
     return 1;
@@ -45,6 +51,8 @@ int stellar_types_newindex(lua_State *L) {
         lua_pushvalue(L, 3);
         lua_pushvalue(L, 2);
         lua_settable(L, 1);
+    } else {
+        luaL_error(L, "Unknown option '%s'", lua_tostring(L, 2));
     }
     return 0;
 }
