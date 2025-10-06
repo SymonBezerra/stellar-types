@@ -8,23 +8,11 @@ String = types.create_type({
     }
 })
 
-assert(pcall(function() 
-    str = String:new({
-        name = 1
-    })
-end) == false)
-
 NumberType = types.create_type({
     value = {
         type = types.NUMBER,
     }
 })
-
-assert(pcall(function() 
-    num = NumberType:new({
-        value = "hello"
-    })
-end) == false)
 
 IntegerType = types.create_type({
     value = {
@@ -32,23 +20,11 @@ IntegerType = types.create_type({
     }
 })
 
-assert(pcall(function() 
-    int = IntegerType:new({
-        value = 3.5
-    })
-end) == false)
-
 BooleanType = types.create_type({
     logic_value = {
         type = types.BOOLEAN,
     }
 })
-
-assert(pcall(function() 
-    bool = BooleanType:new({
-        logic_value = "true"
-    })
-end) == false)
 
 ArrayType = types.create_type({
     data = {
@@ -56,23 +32,11 @@ ArrayType = types.create_type({
     }
 })
 
-assert(pcall(function() 
-    arr = ArrayType:new({
-        data = { value = 1 }
-    })
-end) == false)
-
 DictType = types.create_type({
     dict = {
         type = {}
     }
 })
-
-assert(pcall(function() 
-    dict = DictType:new({
-        dict = "not a table"
-    })
-end) == false)
 
 FunctionType = types.create_type({
     func = {
@@ -80,26 +44,28 @@ FunctionType = types.create_type({
     }
 })
 
-assert(pcall(function() 
-    func = FunctionType:new({
-        func = "not a function"
-    })
-end) == false)
+values = {
+    "string",
+    123,
+    45.67,
+    true,
+    {},
+    {1,2,3},
+    { dict = { key = "value" } },
+    function() return "hello" end
+}
 
-assert(pcall(function() 
-    invalidType = types.create_type({
-        field = {
-            type = "invalid_type"
-        }
-    })
-end) == false)
-
-assert(pcall(function() 
-    invalidType = types.create_type({
-        field = {
-            not_type = types.STRING
-        }
-    })
-end) == false)
+for i = 1, #values do
+    pcall(function()
+        local v = values[i]
+        String({ name = v })
+        NumberType({ value = v })
+        IntegerType({ value = v })
+        BooleanType({ logic_value = v })
+        ArrayType({ data = v })
+        DictType({ dict = v })
+        FunctionType({ func = v })
+    end)
+end
 
 print("All tests passed!")

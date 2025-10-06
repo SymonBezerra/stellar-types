@@ -41,16 +41,16 @@ int luaopen_stellar_types(lua_State *L) {
 }
 
 int stellar_types_newindex(lua_State *L) {
-    if (strcmp(lua_tostring(L, 2), "suppress_warnings") == 0 ||
+    if (strcmp(lua_tostring(L, 2), "warnings") == 0 ||
         strcmp(lua_tostring(L, 2), "error") == 0 ||
         strcmp(lua_tostring(L, 2), "user_error") == 0
     ) {
         if (!lua_isboolean(L, 3)) {
             luaL_error(L, "%s option must be a boolean", lua_tostring(L, 2));
         }
-        lua_pushvalue(L, 3);
         lua_pushvalue(L, 2);
-        lua_settable(L, 1);
+        lua_pushvalue(L, 3);
+        lua_rawset(L, 1);
     } else {
         luaL_error(L, "Unknown option '%s'", lua_tostring(L, 2));
     }
