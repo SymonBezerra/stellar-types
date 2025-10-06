@@ -1,3 +1,5 @@
+-- planned feature, not implemented
+
 types = require("stellar_types")
 
 StringType = types.create_type({
