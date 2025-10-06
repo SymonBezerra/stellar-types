@@ -21,6 +21,7 @@ str2 = StrType:new({
 
 assert(str.name ~= nil)
 assert(str2.name == nil)
+assert(getmetatable(str) == StrType)
 
 NumberType = types.create_type({
     value = {
@@ -44,6 +45,7 @@ number3 = NumberType:new({
 assert(number.value == 25)
 assert(number2.value == 0.5)
 assert(number3.value == nil)
+assert(getmetatable(number) == NumberType)
 
 IntegerType = types.create_type({
     value = {
@@ -67,6 +69,7 @@ integer3 = IntegerType:new({
 assert(integer.value == 10)
 assert(integer2.value == nil)
 assert(integer3.value == nil)
+assert(getmetatable(integer) == IntegerType)
 
 BooleanType = types.create_type({
     logic_value = {
@@ -83,6 +86,7 @@ boolean2 = BooleanType:new({
 
 assert(boolean.logic_value == true)
 assert(boolean2.logic_value == false)
+assert(getmetatable(boolean) == BooleanType)
 
 ArrayType = types.create_type({
     data = {
@@ -118,6 +122,7 @@ array3 = ArrayType:new({
 assert(array.data ~= nil)
 assert(array2.data == nil)
 assert(array3.data == nil)
+assert(getmetatable(array) == ArrayType)
 
 PrimitiveType = types.create_type({
     attr = {
@@ -181,9 +186,11 @@ assert(dict.obj ~= nil)
 assert(dict2.obj == nil)
 assert(dict3.obj == nil)
 assert(dict4.obj == nil)
+assert(getmetatable(dict) == DictType)
 
 assert(nested.nested ~= nil)
 assert(nested2.nested == nil)
+assert(getmetatable(nested) == NestedType)
 
 FunctionType = types.create_type({
     func = {
@@ -204,5 +211,6 @@ func2 = FunctionType:new({
 
 assert(func.func ~= nil)
 assert(func2.func == nil)
+assert(getmetatable(func) == FunctionType)
 
 print("All tests passed!")
