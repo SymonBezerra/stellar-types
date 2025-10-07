@@ -19,7 +19,21 @@ int stm_new(lua_State *L) {
         lua_settable(L, instance_index);
         lua_pop(L, 1);
     }
-    lua_pushvalue(L, instance_index);
+
+    lua_getfield(L, 1, STELLAR_DEFAULTS);
+    int defaults_index = lua_gettop(L);
+
+    lua_pushnil(L);
+    while(lua_next(L, -2) != 0) {
+        const char *field = lua_tostring(L, -2);
+        lua_getfield(L, validators_index, field);
+        if (!lua_isnil(L, -1)) {
+            lua_pushvalue(L, -2);
+            stm_setdefault(L, instance_index);
+            lua_pop(L, 1);
+        }
+        lua_pop(L, 2);
+    }
     return 1;
 }
 
@@ -54,7 +68,8 @@ int stm_newindex(lua_State *L) {
             lua_getfield(L, -3, STELLAR_DEFAULTS);
             lua_getfield(L, -1, key);
             if (!lua_isnil(L, -1)) {
-                stm_setdefault(L);
+                stm_setdefault(L, 1);
+                return 0;
             } else {
                 lua_pop(L, 2);
                 stm_error("User-defined validation failed for field", key);

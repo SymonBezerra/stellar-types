@@ -1,10 +1,8 @@
--- planned feature, not implemented
+types = require('stellar_types')
 
-types = require("stellar_types")
-
-StringType = types.create_type({
+StringUType = types.create_type({
     name = {
-        type = "string",
+        type = 'string',
         default = 'default',
         validation = function(value)
             return #value > 3
@@ -12,8 +10,44 @@ StringType = types.create_type({
     }
 })
 
-print(StringType)
-print(StringType.__defaults.name)
+string = StringUType:new({ name = 'hi'})
 
-str1 = StringType:new({ name = "hi" })
-print(str1.name)  -- should print "default"
+StringType = types.create_type({
+    name = {
+        type = 'string',
+        default = 'default',
+    }
+})
+
+string2 = StringType:new({})
+
+assert(string.name == 'default')
+print(string2.name)
+assert(string2.name == 'default')
+
+IntegerUType = types.create_type({
+    age = {
+        type = 'integer',
+        default = 25,
+        validation = function(value)
+            return value >= 0
+        end
+    }
+})
+
+integer = IntegerUType:new({ age = -5 })
+
+IntegerType = types.create_type({
+    age = {
+        type = 'integer',
+        default = 25,
+    }
+})
+
+integer2 = IntegerType:new({})
+
+print(integer2.age)
+assert(integer.age == 25)
+assert(integer2.age == 25)
+
+print('Default value test passed')

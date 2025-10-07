@@ -11,11 +11,10 @@
 
 /* Stellar Types module functions */
 
-#define stm_setdefault(L) \
+#define stm_setdefault(L, index) \
     lua_pushvalue(L, 2); \
     lua_pushvalue(L, -2); \
-    lua_rawset(L, 1); \
-    return 0;
+    lua_rawset(L, index); \
 
 #define stm_setvalue(L) \
     lua_pushvalue(L, 2); \
