@@ -36,6 +36,7 @@
     lua_getfield(L, -1, "user_error"); \
     lua_getfield(L, -5, "__on_validate_error"); \
     lua_getfield(L, -1, field); \
+    printf("-3 type: %s\n", luaL_typename(L, -3)); \
     if (lua_type(L, -3) == LUA_TBOOLEAN && lua_toboolean(L, -3) && lua_toboolean(L, -1)) { \
         luaL_error(L, "%s: %s, \'%s\'\n", STELLAR_ERROR, msg, field); \
     } \

@@ -1,5 +1,7 @@
 types = require('stellar_types')
 
+types.user_error = true
+
 StringUType = types.create_type({
     name = {
         type = 'string',
