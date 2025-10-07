@@ -47,13 +47,17 @@ Each table attribute is a string-indexed table with a few fields:
     + `ANY`
 2. `validation`, a validation function that returns a boolean value
 3. `error`, a boolean value that triggers an exception if the `validation` callback returns a `false` value (must have `require('stellar_types').user_error = true` enabled)
+4. `default`, a default value in case of validation failure.
+
+> The `validation` callback is only asserted on the creation of objects. If it does not return a boolean, an error\warning will be passed, and the field will either be `nil` or fallback to the default value.
 
 ```lua
 Config = types.create_type({
     ['value'] = {
         ['type'] = types.STRING,
         ['validation'] = function(v) return #v > 0 end,
-        ['error'] = true
+        ['error'] = true,
+        ['default'] = 'default'
     }
 })
 ```

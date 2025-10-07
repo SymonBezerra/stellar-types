@@ -3,7 +3,7 @@
 int stm_new(lua_State *L) {
     luaL_checktype(L, 1, LUA_TTABLE);
 
-    lua_getfield(L, 1, "__validators");
+    lua_getfield(L, 1, STELLAR_VALIDATORS);
     int validators_index = lua_gettop(L);
 
     lua_newtable(L);
@@ -21,16 +21,13 @@ int stm_new(lua_State *L) {
     }
 
     lua_getfield(L, 1, STELLAR_DEFAULTS);
-    int defaults_index = lua_gettop(L);
-
     lua_pushnil(L);
-    while(lua_next(L, -2) != 0) {
-        const char *field = lua_tostring(L, -2);
-        lua_getfield(L, validators_index, field);
-        if (!lua_isnil(L, -1)) {
+    while (lua_next(L, -2) != 0) {
+        const char* field = lua_tostring(L, -2);
+        lua_getfield(L, instance_index, lua_tostring(L, -2));
+        if (lua_isnil(L, -1) && !lua_isnil(L, -2)) {
             lua_pushvalue(L, -2);
-            stm_setdefault(L, instance_index);
-            lua_pop(L, 1);
+            lua_setfield(L, instance_index, field);
         }
         lua_pop(L, 2);
     }
@@ -41,7 +38,7 @@ int stm_newindex(lua_State *L) {
     const char *key = luaL_checkstring(L, 2);
 
     lua_getmetatable(L, 1);
-    lua_getfield(L, -1, "__validators");
+    lua_getfield(L, -1, STELLAR_VALIDATORS);
     lua_getfield(L, -1, key);
     if (lua_isfunction(L, -1)) {
         lua_pushvalue(L, 3);

@@ -5,8 +5,9 @@ StringUType = types.create_type({
         type = 'string',
         default = 'default',
         validation = function(value)
-            return #value > 3
-        end
+            return 1
+        end,
+        error = true
     }
 })
 
@@ -21,6 +22,7 @@ StringType = types.create_type({
 
 string2 = StringType:new({})
 
+print(string.name)
 assert(string.name == 'default')
 print(string2.name)
 assert(string2.name == 'default')
