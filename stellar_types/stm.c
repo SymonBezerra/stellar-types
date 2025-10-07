@@ -1,10 +1,13 @@
 #include "stm.h"
 
 int stm_new(lua_State *L) {
-    luaL_checktype(L, 1, LUA_TTABLE);
+    luaL_checktype(L, 2, LUA_TTABLE);
 
     lua_getfield(L, 1, STELLAR_VALIDATORS);
     int validators_index = lua_gettop(L);
+
+    lua_getfield(L, 1, STELLAR_DEFAULTS);
+    int defaults_index = lua_gettop(L);
 
     lua_newtable(L);
     int instance_index = lua_gettop(L);
@@ -13,23 +16,27 @@ int stm_new(lua_State *L) {
     lua_setmetatable(L, instance_index);
 
     lua_pushnil(L);
-    while (lua_next(L, 2) != 0) {
-        lua_pushvalue(L, -2);
-        lua_pushvalue(L, -2);
-        lua_settable(L, instance_index);
-        lua_pop(L, 1);
-    }
-
-    lua_getfield(L, 1, STELLAR_DEFAULTS);
-    lua_pushnil(L);
-    while (lua_next(L, -2) != 0) {
-        const char* field = lua_tostring(L, -2);
-        lua_getfield(L, instance_index, lua_tostring(L, -2));
-        if (lua_isnil(L, -1) && !lua_isnil(L, -2)) {
-            lua_pushvalue(L, -2);
-            lua_setfield(L, instance_index, field);
+    while (lua_next(L, validators_index) != 0) {
+        const char *field_key = lua_tostring(L, -2);
+        // validator key
+        lua_getfield(L, instance_index, field_key);
+        // value validator key
+        lua_pushstring(L, field_key);
+        // key value validator key
+        if (lua_isnil(L, -2)) {
+            lua_getfield(L, defaults_index, field_key);
+            // default key value validator key
+            if (!lua_isnil(L, -1)) {
+                lua_pushvalue(L, -2);
+                // key default key value validator key
+                lua_pushvalue(L, -2);
+                // default key default key value validator key
+                lua_settable(L, instance_index);
+                // default key value validator key
+            }
+            lua_pop(L, 1);
         }
-        lua_pop(L, 2);
+        lua_pop(L, 3); // pop value, iter key
     }
     return 1;
 }

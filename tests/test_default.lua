@@ -7,7 +7,7 @@ StringUType = types.create_type({
         type = 'string',
         default = 'default',
         validation = function(value)
-            return 1
+            return #value > 3
         end,
         error = true
     }
@@ -24,9 +24,7 @@ StringType = types.create_type({
 
 string2 = StringType:new({})
 
-print(string.name)
 assert(string.name == 'default')
-print(string2.name)
 assert(string2.name == 'default')
 
 IntegerUType = types.create_type({
@@ -50,8 +48,7 @@ IntegerType = types.create_type({
 
 integer2 = IntegerType:new({})
 
-print(integer2.age)
-assert(integer.age == 25)
+print(integer.age)
 assert(integer2.age == 25)
 
 print('Default value test passed')
