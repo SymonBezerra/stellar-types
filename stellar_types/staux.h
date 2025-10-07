@@ -7,7 +7,7 @@
 #include <lua5.3/lua.h>
 #include <lua5.3/lauxlib.h>
 
-#include "types.h"
+#include "sto.h"
 
 /* Auxiliary functions to be called inside C functions */
 

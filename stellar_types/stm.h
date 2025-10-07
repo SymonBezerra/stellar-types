@@ -7,7 +7,7 @@
 #include <lua5.3/lua.h>
 #include <lua5.3/lauxlib.h>
 
-#include "types.h"
+#include "sto.h"
 
 /* Stellar Types module functions */
 

@@ -1,5 +1,5 @@
-#ifndef STELLAR_TYPES_TYPES_H
-#define STELLAR_TYPES_TYPES_H
+#ifndef STO_H
+#define STO_H
 
 #define FALSE 0
 #define TRUE 1
