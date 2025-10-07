@@ -30,7 +30,7 @@ assert(string2.name == 'default')
 IntegerUType = types.create_type({
     age = {
         type = 'integer',
-        default = 25,
+        default = -1,
         validation = function(value)
             return value >= 0
         end

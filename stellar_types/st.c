@@ -68,8 +68,16 @@ int st_create_type(lua_State *L) {
         if (lua_isfunction(L, -1)) {
             lua_pushvalue(L, -1);
             lua_setfield(L, extra_validators_index, name);
+
+            lua_getfield(L, defaults_index, name);
+            if (!lua_isnil(L, -1)) {
+                lua_call(L, 1, 1);
+                if (!lua_toboolean(L, -1) || !lua_isboolean(L, -1)) {
+                    st_udefaulterr(name);
+                }
+            }
         } else if (!lua_isnil(L, -1)) {
-            luaL_error(L, "Validation for field \'%s\' is not a function", name);
+            st_validationerr(name);
         }
         lua_pop(L, 1);
 

@@ -49,7 +49,7 @@ Each table attribute is a string-indexed table with a few fields:
 3. `error`, a boolean value that triggers an exception if the `validation` callback returns a `false` value (must have `require('stellar_types').user_error = true` enabled)
 4. `default`, a default value in case of validation failure.
 
-> The `validation` callback is only asserted on the creation of objects. If it does not return a boolean, an error\warning will be passed, and the field will either be `nil` or fallback to the default value. If `default` is invalid, it falls back to `nil` or throws user-defined validation error.
+> Regarding the `default` value: it is validated both for type and user-defined validation at class creation, raising an error for failure. The `validation` callback is validated on class creation if `default` is set, raising an error for either failure or not returning a boolean. If `default` is not set, it will be validated on instance creation, raising either an warning with `nil` fallback, or error (if `types.user_error` is set to true).
 
 ```lua
 Config = types.create_type({

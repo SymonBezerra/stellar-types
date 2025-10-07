@@ -28,6 +28,9 @@
 #define st_udefaulterr(field) \
     luaL_error(L, "Default value for field '%s' does not pass user-defined validation or callback did not return boolean", field);
 
+#define st_validationerr(field) \
+    luaL_error(L, "Validation for field '%s' is not a function", field);
+
 int st_create_type(lua_State *L);
 
 #endif
