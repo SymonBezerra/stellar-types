@@ -23,6 +23,9 @@
 #define STELLAR_TYPE_OPTION "type"
 #define STELLAR_VALIDATION_OPTION "validation"
 
+#define STELLAR_TYPES_MODULE "stellar_types"
+
+#define STELLAR_CLASS "__class"
 #define STELLAR_DEFAULTS "__defaults"
 #define STELLAR_INDEX "__index"
 #define STELLAR_EXTRA_VALIDATORS "__extra_validators"

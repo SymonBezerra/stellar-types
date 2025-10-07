@@ -24,6 +24,8 @@ StringType = types.create_type({
 
 string2 = StringType:new({})
 
+print(string.name, string2.name)
+
 assert(string.name == 'default')
 assert(string2.name == 'default')
 

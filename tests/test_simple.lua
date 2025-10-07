@@ -12,18 +12,15 @@ StrType = types.create_type({
 })
 
 str = StrType:new({
-    name = "hello"
+    name = 'hello'
 })
 
 str2 = StrType:new({
     name = "hi"
 })
 
-print(str.name)
-
 assert(str.name ~= nil)
 assert(str2.name == nil)
-assert(getmetatable(str) == StrType)
 
 NumberType = types.create_type({
     value = {

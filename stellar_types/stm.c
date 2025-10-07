@@ -1,6 +1,11 @@
 #include "stm.h"
 
 int stm_new(lua_State *L) {
+    lua_getfield(L, 1, STELLAR_CLASS);
+    lua_pushstring(L, STELLAR_TYPES_MODULE);
+    if (!lua_compare(L, -1, -2, LUA_OPEQ)) {
+        luaL_error(L, "Class is not a StellarTypes class");
+    }
     luaL_checktype(L, 2, LUA_TTABLE);
 
     lua_getfield(L, 1, STELLAR_VALIDATORS);
@@ -16,28 +21,38 @@ int stm_new(lua_State *L) {
     lua_setmetatable(L, instance_index);
 
     lua_pushnil(L);
-    while (lua_next(L, validators_index) != 0) {
-        const char *field_key = lua_tostring(L, -2);
-        // validator key
-        lua_getfield(L, instance_index, field_key);
-        // value validator key
-        lua_pushstring(L, field_key);
-        // key value validator key
-        if (lua_isnil(L, -2)) {
-            lua_getfield(L, defaults_index, field_key);
-            // default key value validator key
+    while (lua_next(L, 2) != 0) {
+        const char* name = lua_tostring(L, -2);
+        if (!lua_isnil(L, -1)) {
+            lua_pushstring(L, name);
+            lua_pushvalue(L, -2);
+            lua_settable(L, instance_index);
+        } else {
+            lua_getfield(L, defaults_index, name);
             if (!lua_isnil(L, -1)) {
+                lua_pushstring(L, name);
                 lua_pushvalue(L, -2);
-                // key default key value validator key
-                lua_pushvalue(L, -2);
-                // default key default key value validator key
                 lua_settable(L, instance_index);
-                // default key value validator key
             }
             lua_pop(L, 1);
         }
-        lua_pop(L, 3); // pop value, iter key
+        lua_pop(L, 1);
     }
+
+    lua_getfield(L, 1, STELLAR_VALIDATORS);
+    lua_pushnil(L);
+    while(lua_next(L, -2) != 0) {
+        const char* name = lua_tostring(L, -2);
+        lua_getfield(L, instance_index, name);
+        lua_getfield(L, defaults_index, name);
+        if (!lua_isnil(L, -1) && lua_isnil(L, -2)) {
+            lua_pushstring(L, name);
+            lua_pushvalue(L, -2);
+            lua_settable(L, instance_index);
+        }
+        lua_pop(L, 3);
+    }
+    lua_pop(L ,1);
     return 1;
 }
 
@@ -56,9 +71,9 @@ int stm_newindex(lua_State *L) {
         }
     }
     lua_pop(L, 2);
-    lua_pushvalue(L, -1);
+    lua_getmetatable(L, 1);
 
-    lua_getfield(L, -1, "__extra_validators");
+    lua_getfield(L, -1, STELLAR_EXTRA_VALIDATORS);
     lua_getfield(L, -1, key);
     int valid = TRUE;
     if (!lua_isnil(L, -1)) {
