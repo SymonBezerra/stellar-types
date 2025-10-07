@@ -33,6 +33,8 @@ types.errors = true -- exception raising on validation failure
 types.user_error = true -- exception raising on user-defined validation failure
 ```
 
+> Every error on `create_type` raises an exception, while errors on instance creation can either raise an error or flash a warning. If `types.errors` is set, the errors for type-validation will raise exceptions, whereas `types.user_error` raises exceptions for user-defined validation errors.
+
 Each table attribute is a string-indexed table with a few fields:
 
 1. `type`, where possible values are:
