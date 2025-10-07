@@ -19,6 +19,8 @@ str2 = StrType:new({
     name = "hi"
 })
 
+print(str.name)
+
 assert(str.name ~= nil)
 assert(str2.name == nil)
 assert(getmetatable(str) == StrType)

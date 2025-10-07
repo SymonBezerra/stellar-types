@@ -11,8 +11,17 @@
 
 /* Stellar Types module functions */
 
-#define stm_setnil(L) __stm_setfield(L, FALSE); return 0;
-#define stm_setvalue(L) __stm_setfield(L, TRUE); return 0;
+#define stm_setdefault(L) \
+    lua_pushvalue(L, 2); \
+    lua_pushvalue(L, -2); \
+    lua_rawset(L, 1); \
+    return 0;
+
+#define stm_setvalue(L) \
+    lua_pushvalue(L, 2); \
+    lua_pushvalue(L, 3); \
+    lua_rawset(L, 1); \
+    return 0;
 
 #define stm_warning(msg, field) \
     lua_getfield(L, LUA_REGISTRYINDEX, "st"); \
@@ -36,6 +45,5 @@
 
 int stm_new(lua_State *L);
 int stm_newindex(lua_State *L);
-static void __stm_setfield(lua_State *L);
 
 #endif

@@ -34,11 +34,18 @@ int st_create_type(lua_State *L) {
             st_itypeerr(name, lua_typename(L, lua_type(L, -1)));
         }
         lua_pop(L, 1);
+        
         lua_getfield(L, -2, STELLAR_ERROR_OPTION);
         lua_pushcclosure(L, staux_register_type, 2);
         lua_setfield(L, validators_index, name);
 
-        lua_pop(L, 1);
+        lua_getfield(L, -1, STELLAR_DEFAULT_OPTION);
+        if (!lua_isnil(L, -1)) {
+            lua_pushvalue(L, -1);
+            lua_setfield(L, defaults_index, name);
+        }
+
+        lua_pop(L, 2);
     }
 
     lua_newtable(L);
@@ -79,6 +86,8 @@ int st_create_type(lua_State *L) {
     lua_setfield(L, instance_index, STELLAR_EXTRA_VALIDATORS);
     lua_pushvalue(L, error_index);
     lua_setfield(L, instance_index, STELLAR_ON_VALIDATE_ERROR);
+    lua_pushvalue(L, defaults_index);
+    lua_setfield(L, instance_index, STELLAR_DEFAULTS);
     lua_pushvalue(L, instance_index);
 
     return 1;

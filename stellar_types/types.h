@@ -18,14 +18,16 @@
 #define STELLAR_TFUNCTION "function"
 #define STELLAR_TUSERDATA "userdata"
 
+#define STELLAR_DEFAULT_OPTION "default"
+#define STELLAR_ERROR_OPTION "error"
 #define STELLAR_TYPE_OPTION "type"
 #define STELLAR_VALIDATION_OPTION "validation"
-#define STELLAR_ERROR_OPTION "error"
 
+#define STELLAR_DEFAULTS "__defaults"
 #define STELLAR_INDEX "__index"
-#define STELLAR_NEWINDEX "__newindex"
-#define STELLAR_VALIDATORS "__validators"
 #define STELLAR_EXTRA_VALIDATORS "__extra_validators"
+#define STELLAR_NEWINDEX "__newindex"
 #define STELLAR_ON_VALIDATE_ERROR "__on_validate_error"
+#define STELLAR_VALIDATORS "__validators"
 
 #endif

@@ -51,19 +51,21 @@ int stm_newindex(lua_State *L) {
             stm_warning("User-defined validation did not return a boolean for field", key);
             valid = FALSE;
         } else if (!lua_toboolean(L, -1)) {
-            stm_error("User-defined validation failed for field", key);
-            stm_warning("User-defined validation failed for field", key);
-            valid = FALSE;
+            lua_getfield(L, -3, STELLAR_DEFAULTS);
+            lua_getfield(L, -1, key);
+            if (!lua_isnil(L, -1)) {
+                stm_setdefault(L);
+            } else {
+                lua_pop(L, 2);
+                stm_error("User-defined validation failed for field", key);
+                stm_warning("User-defined validation failed for field", key);
+                valid = FALSE;
+            }
         }
+        lua_pop(L, 2);
     }
     lua_pop(L, 2);
-    if (valid)
-        __stm_setfield(L);
-    return 0;
-}
-
-static void __stm_setfield(lua_State *L) {
-    lua_pushvalue(L, 2);
-    lua_pushvalue(L, 3);
-    lua_rawset(L, 1);
+    if (valid) {
+        stm_setvalue(L);
+    }
 }
