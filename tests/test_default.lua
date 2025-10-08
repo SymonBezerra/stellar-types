@@ -5,7 +5,6 @@ types.user_error = true
 StringUType = types.create_type({
     name = {
         type = 'string',
-        default = 'default',
         validation = function(value)
             return #value > 3
         end,
@@ -13,7 +12,7 @@ StringUType = types.create_type({
     }
 })
 
-string = StringUType:new({ name = 'hi'})
+string = StringUType:new({})
 
 StringType = types.create_type({
     name = {

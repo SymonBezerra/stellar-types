@@ -41,6 +41,14 @@
     } \
     lua_pop(L, 3);
 
+#define stm_nilerror(msg, field) \
+    lua_getfield(L, LUA_REGISTRYINDEX, "st"); \
+    lua_getfield(L, -1, "error"); \
+    if (lua_type(L, -1) == LUA_TBOOLEAN && lua_toboolean(L, -1)) { \
+        luaL_error(L, "%s: %s, \'%s\'\n", STELLAR_ERROR, msg, field); \
+    } \
+    lua_pop(L, 2);
+
 
 int stm_new(lua_State *L);
 int stm_newindex(lua_State *L);

@@ -14,6 +14,9 @@ int st_create_type(lua_State *L) {
     lua_newtable(L);
     int defaults_index = lua_gettop(L);
 
+    lua_newtable(L);
+    int nullable_index = lua_gettop(L);
+
     lua_pushnil(L);
     while (lua_next(L, 1) != 0) {
         if (!lua_istable(L, -1)) {
@@ -54,6 +57,16 @@ int st_create_type(lua_State *L) {
             }
             lua_pop(L, 1);
             lua_setfield(L, defaults_index, name);
+        }
+        lua_pop(L, 1);
+        
+        lua_getfield(L, -1, STELLAR_NULLABLE_OPTION);
+        if (lua_toboolean(L, -1)) {
+            lua_pushvalue(L, -1);
+            lua_setfield(L, nullable_index, name);
+        } else {
+            lua_pushboolean(L, FALSE);
+            lua_setfield(L, nullable_index, name);
         }
         lua_pop(L, 2);
     }
@@ -110,6 +123,8 @@ int st_create_type(lua_State *L) {
     lua_setfield(L, class_index, STELLAR_DEFAULTS);
     lua_pushstring(L, STELLAR_TYPES_MODULE);
     lua_setfield(L, class_index, STELLAR_CLASS);
+    lua_pushvalue(L, nullable_index);
+    lua_setfield(L, class_index, STELLAR_ISNULLABLE);
     lua_pushvalue(L, class_index);
 
     return 1;

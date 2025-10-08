@@ -14,6 +14,9 @@ int stm_new(lua_State *L) {
     lua_getfield(L, 1, STELLAR_DEFAULTS);
     int defaults_index = lua_gettop(L);
 
+    lua_getfield(L, 1, STELLAR_ISNULLABLE);
+    int nullable_index = lua_gettop(L);
+
     lua_newtable(L);
     int instance_index = lua_gettop(L);
 
@@ -50,9 +53,15 @@ int stm_new(lua_State *L) {
             lua_pushvalue(L, -2);
             lua_settable(L, instance_index);
         }
-        lua_pop(L, 3);
+        // lua_pop(L, 1);
+        lua_getfield(L, nullable_index, name);
+        if (!lua_toboolean(L, -1) && lua_isnil(L, -2)) {
+            stm_nilerror("Field is not nullable", name);
+            stm_warning("Field is not nullable", name);
+        }
+        lua_pop(L, 4);
     }
-    lua_pop(L ,1);
+    lua_pop(L, 1);
     return 1;
 }
 
@@ -80,7 +89,7 @@ int stm_newindex(lua_State *L) {
         lua_pushvalue(L, 3);
         lua_call(L, 1, 1);
         if (!lua_isboolean(L, -1) || lua_isnil(L, -1)) {
-            stm_error("User-defined validation did not return a boolean for field", key);
+            stm_nilerror("User-defined validation did not return a boolean for field", key);
             stm_warning("User-defined validation did not return a boolean for field", key);
             valid = FALSE;
         } else if (!lua_toboolean(L, -1)) {

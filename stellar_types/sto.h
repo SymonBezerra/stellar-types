@@ -30,6 +30,8 @@
 #define STELLAR_INDEX "__index"
 #define STELLAR_EXTRA_VALIDATORS "__extra_validators"
 #define STELLAR_NEWINDEX "__newindex"
+#define STELLAR_NULLABLE_OPTION "nullable"
+#define STELLAR_ISNULLABLE "__isnullable"
 #define STELLAR_ON_VALIDATE_ERROR "__on_validate_error"
 #define STELLAR_VALIDATORS "__validators"
 
