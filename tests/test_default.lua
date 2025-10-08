@@ -6,8 +6,7 @@ StringUType = types.create_type('StringUType', {
         validation = function(value)
             return #value > 3
         end,
-        default = 'default',
-        nullable = true
+        default = 'default'
     }
 })
 

@@ -8,7 +8,6 @@ StrType = types.create_type('StrType', {
         ['validation'] = function(value)
             return #value > 3
         end,
-        ['nullable'] = true
     }
 })
 
@@ -29,7 +28,6 @@ NumberType = types.create_type('NumberType', {
         ['validation'] = function(value)
             return value >= 0
         end,
-        ['nullable'] = true
     }
 })
 
@@ -54,7 +52,6 @@ IntegerType = types.create_type('IntegerType', {
         ['validation'] = function(value)
             return value % 2 == 0
         end,
-        ['nullable'] = true
     }
 })
 
@@ -76,7 +73,6 @@ assert(getmetatable(integer) == IntegerType)
 BooleanType = types.create_type('BooleanType', {
     logic_value = {
         ['type'] = types.BOOLEAN,
-        ['nullable'] = true
     }
 })
 
@@ -107,7 +103,6 @@ ArrayType = types.create_type('ArrayType', {
             end
             return valid
         end,
-        ['nullable'] = true
     }
 })
 
@@ -133,8 +128,7 @@ PrimitiveType = types.create_type('PrimitiveType', {
         type = types.STRING,
         validation = function(value)
             return #value > 0
-        end,
-        nullable = true
+        end
     }
 })
 
@@ -151,8 +145,7 @@ NestedType = types.create_type('NestedType', {
         type = PrimitiveType,
         validation = function(value)
             return #value.attr < 10
-        end,
-        nullable = true
+        end
     }
 })
 
@@ -169,8 +162,7 @@ DictType = types.create_type('DictType', {
         type = {},
         validation = function(value)
             return value['key'] ~= nil and type(value['key']) == 'number' and value['key'] > 0
-        end,
-        nullable = true
+        end
     }
 })
 
@@ -204,8 +196,7 @@ FunctionType = types.create_type('FunctionType', {
         type = types.FUNCTION,
         validation = function(value)
             return debug.getinfo(value).nparams == 2
-        end,
-        nullable = true
+        end
     }
 })
 

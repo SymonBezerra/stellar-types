@@ -5,7 +5,8 @@ StringType = types.create_type('StringType', {
         ['type'] = types.STRING,
         ['validation'] = function(value)
             return #value > 3
-        end
+        end,
+        ['nullable'] = false
     }
 })
 
