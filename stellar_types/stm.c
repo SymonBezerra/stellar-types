@@ -55,7 +55,7 @@ int stm_new(lua_State *L) {
         }
         // lua_pop(L, 1);
         lua_getfield(L, nullable_index, name);
-        if (!lua_toboolean(L, -1) && lua_isnil(L, -2)) {
+        if (!lua_toboolean(L, -1) && lua_isnil(L, -2) && lua_isnil(L, -3)) {
             stm_nilerror("Field is not nullable", name);
             stm_warning("Field is not nullable", name);
         }

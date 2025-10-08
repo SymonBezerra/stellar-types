@@ -20,6 +20,15 @@ IntegerType = types.create_type({
     }
 })
 
-assert(str ~= nil)
+assert(pcall(function() age = IntegerType:new({ age = -1 }) end) == true)
 
-assert(pcall(function() age = IntegerType:new({ age = -1 }) end) == false)
+DictType = types.create_type({
+    data = {
+        ['type'] = {},
+        ['validation'] = function(value)
+            return value.attr ~= nil
+        end
+    }
+})
+
+dict = DictType:new({ data = { attr = 'value' } })
