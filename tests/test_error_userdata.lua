@@ -3,7 +3,7 @@ types = require("stellar_types")
 
 types.error = true
 
-ListType = types.create_type({
+ListType = types.create_type('ListType', {
     list = {
         type = types.USERDATA,
         validation = function(value)

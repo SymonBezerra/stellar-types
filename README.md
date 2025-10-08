@@ -5,7 +5,7 @@
 ```lua
 types = require("stellar_types")
 
-Config = types.create_type({
+Config = types.create_type('Config', {
     ['value'] = {
         ['type'] = types.STRING
     }
@@ -22,6 +22,8 @@ instance2 = Config:new({
 print(instance.value) --> 'config value'
 print(instance2.value) --> nil
 ```
+
+The first argument is a class name that will be passed to a `__name` attribute and also used in the `__tostring` metamethod. The second argument is a table that will receive the schema for the object we are creating.
 
 As a default behavior, invalid instances return `nil` values to the fields, outputing a warning to `stderr`. This behavior can be altered if desired by the user:
 
@@ -54,12 +56,13 @@ Each table attribute is a string-indexed table with a few fields:
 > Regarding the `default` value: it is validated both for type and user-defined validation at class creation, raising an error for failure. The `validation` callback is validated on class creation if `default` is set, raising an error for either failure or not returning a boolean. If `default` is not set, it will be validated on instance creation, raising either an warning with `nil` fallback, or error (if `types.user_error` is set to true).
 
 ```lua
-Config = types.create_type({
+Config = types.create_type('Config', {
     ['value'] = {
         ['type'] = types.STRING,
         ['validation'] = function(v) return #v > 0 end,
         ['error'] = true,
-        ['default'] = 'default'
+        ['default'] = 'default',
+        ['nullable'] = true
     }
 })
 ```
@@ -73,7 +76,7 @@ The `stellar_types` module is intended to be used with the `lupa` Python library
 You can define the subtype of the array table using the user-defined validation:
 
 ```lua
-ArrayType = types.create_type({
+ArrayType = types.create_type('Array', {
     ['arr'] = {
         ['type'] = types.ARRAY,
         ['validation'] = function (v)
@@ -96,7 +99,7 @@ String-indexed tables are validated via their metatable (inheritance). You may u
 
 ```lua
 
-PrimitiveType = types.create_type({
+PrimitiveType = types.create_type('Primitive', {
     attr = {
         type = types.STRING,
         validation = function(value)
@@ -109,7 +112,7 @@ primitive = PrimitiveTypetypes.STRING:new({
     attr = "value"
 })
 
-NestedType = types.create_type({
+NestedType = types.create_type('Nested', {
     nested = {
         type = PrimitiveType,
         validation = function(value)
@@ -122,7 +125,7 @@ nested = NestedType:new({
     nested = primitive
 })
 
-DictType = types.create_type({
+DictType = types.create_type('Dict', {
     dict = {
         type = {}, -- regular dictionary
         validation = function(v)
@@ -141,7 +144,7 @@ dictionary = DictType:new({
 You may define a composite type using the user-defined validation:
 
 ```lua
-CompositeType = types.create_type({
+CompositeType = types.create_type('Composite', {
     ['attr'] = {
         ['type'] = 'any',
         ['validation'] = function(v)
@@ -163,7 +166,7 @@ While there is a way to validate Lua-defined userdata, there is no way to valida
 -- example with lupa
 types = require("stellar_types")
 
-UserdataTypes = types.create_type({
+UserdataTypes = types.create_type('Udata', {
     ['list'] = {
         ['type'] = 'userdata',
         ['validation'] = function(v)

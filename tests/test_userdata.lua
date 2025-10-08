@@ -2,12 +2,13 @@
 
 types = require("stellar_types")
 
-UDataType = types.create_type({
+UDataType = types.create_type('UDataType', {
     udata = {
         ['type'] = 'userdata',
         ['validation'] = function(value)
             return python.builtins.len(value) > 0
-        end
+        end,
+        ['nullable'] = true
     }
 })
 

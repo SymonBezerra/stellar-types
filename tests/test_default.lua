@@ -1,20 +1,19 @@
 types = require('stellar_types')
 
-types.user_error = true
-
-StringUType = types.create_type({
+StringUType = types.create_type('StringUType', {
     name = {
         type = 'string',
         validation = function(value)
             return #value > 3
         end,
-        error = true
+        default = 'default',
+        nullable = true
     }
 })
 
 string = StringUType:new({})
 
-StringType = types.create_type({
+StringType = types.create_type('StringType', {
     name = {
         type = 'string',
         default = 'default',
@@ -23,15 +22,13 @@ StringType = types.create_type({
 
 string2 = StringType:new({})
 
-print(string.name, string2.name)
-
 assert(string.name == 'default')
 assert(string2.name == 'default')
 
-IntegerUType = types.create_type({
+IntegerUType = types.create_type('IntegerUType', {
     age = {
         type = 'integer',
-        default = -1,
+        default = 18,
         validation = function(value)
             return value >= 0
         end
@@ -40,7 +37,7 @@ IntegerUType = types.create_type({
 
 integer = IntegerUType:new({ age = -5 })
 
-IntegerType = types.create_type({
+IntegerType = types.create_type('IntegerType', {
     age = {
         type = 'integer',
         default = 25,
@@ -49,7 +46,7 @@ IntegerType = types.create_type({
 
 integer2 = IntegerType:new({})
 
-print(integer.age)
+assert(integer.age == 18)
 assert(integer2.age == 25)
 
 print('Default value test passed')

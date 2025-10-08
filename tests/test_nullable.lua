@@ -1,6 +1,6 @@
 types = require("stellar_types")
 
-StringType = types.create_type({
+StringType = types.create_type('StringType', {
     name = {
         ['type'] = types.STRING,
         ['validation'] = function(value)
@@ -11,7 +11,7 @@ StringType = types.create_type({
 
 str = StringType:new({ name = 'hi' })
 
-IntegerType = types.create_type({
+IntegerType = types.create_type('IntegerType', {
     age = {
         ['type'] = types.INTEGER,
         ['validation'] = function(value)
@@ -22,7 +22,7 @@ IntegerType = types.create_type({
 
 assert(pcall(function() age = IntegerType:new({ age = -1 }) end) == true)
 
-DictType = types.create_type({
+DictType = types.create_type('DictType', {
     data = {
         ['type'] = {},
         ['validation'] = function(value)
@@ -32,3 +32,5 @@ DictType = types.create_type({
 })
 
 dict = DictType:new({ data = { attr = 'value' } })
+
+print('All tests passed!')

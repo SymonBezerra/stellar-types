@@ -1,6 +1,8 @@
 #include "st.h"
 
 int st_create_type(lua_State *L) {
+    luaL_checktype(L, 1, LUA_TSTRING);
+    luaL_checktype(L, 2, LUA_TTABLE);
 
     lua_newtable(L);
     int class_index = lua_gettop(L);
@@ -18,7 +20,7 @@ int st_create_type(lua_State *L) {
     int nullable_index = lua_gettop(L);
 
     lua_pushnil(L);
-    while (lua_next(L, 1) != 0) {
+    while (lua_next(L, 2) != 0) {
         if (!lua_istable(L, -1)) {
             luaL_error(L, "Expected a table for field '%s', got '%s'", lua_tostring(L, -2), luaL_typename(L, -1));
         }
@@ -78,7 +80,7 @@ int st_create_type(lua_State *L) {
     int error_index = lua_gettop(L);
 
     lua_pushnil(L);
-    while (lua_next(L, 1) != 0) {
+    while (lua_next(L, 2) != 0) {
         const char* name = lua_tostring(L, -2);
         lua_getfield(L, -1, STELLAR_VALIDATION_OPTION);
         if (lua_isfunction(L, -1)) {
@@ -111,10 +113,14 @@ int st_create_type(lua_State *L) {
     lua_pushvalue(L, class_index);
     lua_setfield(L, -2, STELLAR_INDEX);
 
+    lua_pushvalue(L, 1);
+    lua_setfield(L, class_index, STELLAR_NAME);
     lua_pushvalue(L, validators_index);
     lua_setfield(L, class_index, STELLAR_VALIDATORS);
     lua_pushcfunction(L, stm_newindex);
     lua_setfield(L, class_index, STELLAR_NEWINDEX);
+    lua_pushcfunction(L, stm_tostring);
+    lua_setfield(L, class_index, STELLAR_TOSTRING);
     lua_pushvalue(L, extra_validators_index);
     lua_setfield(L, class_index, STELLAR_EXTRA_VALIDATORS);
     lua_pushvalue(L, error_index);

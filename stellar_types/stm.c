@@ -112,3 +112,13 @@ int stm_newindex(lua_State *L) {
         stm_setvalue(L);
     }
 }
+
+int stm_tostring(lua_State *L) {
+    lua_getmetatable(L, 1);
+    lua_getfield(L, -1, STELLAR_NAME);
+    const char* name = lua_tostring(L, -1);
+    lua_pop(L, 2);
+
+    lua_pushfstring(L, "%s: %p", name, lua_topointer(L, 1));
+    return 1;
+}

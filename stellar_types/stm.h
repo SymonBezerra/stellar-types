@@ -52,5 +52,6 @@
 
 int stm_new(lua_State *L);
 int stm_newindex(lua_State *L);
+int stm_tostring(lua_State *L);
 
 #endif

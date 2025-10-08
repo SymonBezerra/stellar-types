@@ -2,7 +2,7 @@ types = require('stellar_types')
 
 types.user_error = true
 
-StringType = types.create_type({
+StringType = types.create_type('StringType', {
     name = {
         type = 'string',
         validation = function(value)
@@ -17,7 +17,7 @@ end)
 
 assert(string.name == nil)
 
-IntegerType = types.create_type({
+IntegerType = types.create_type('IntegerType', {
     age = {
         type = 'integer',
         validation = function(value)
@@ -32,7 +32,7 @@ end)
 
 assert(integer.age == nil)
 
-NumberType = types.create_type({
+NumberType = types.create_type('NumberType', {
     score = {
         type = 'number',
         validation = function(value)
@@ -47,7 +47,7 @@ end)
 
 assert(number.score == nil)
 
-BooleanType = types.create_type({
+BooleanType = types.create_type('BooleanType', {
     is_active = {
         type = 'boolean',
         validation = function(value)
@@ -62,7 +62,7 @@ end)
 
 assert(boolean.is_active == nil)
 
-ArrayType = types.create_type({
+ArrayType = types.create_type('ArrayType', {
     tags = {
         type = 'array',
         validation = function(value)
@@ -77,7 +77,7 @@ end)
 
 assert(array.tags == nil)
 
-DictType = types.create_type({
+DictType = types.create_type('DictType', {
     config = {
         type = {},
         validation = function(value)
@@ -92,7 +92,7 @@ end)
 
 assert(dict.config == nil)
 
-NestedType = types.create_type({
+NestedType = types.create_type('NestedType', {
     username = {
         type = StringType,
         validation = function(value)

@@ -2,43 +2,43 @@ types = require("stellar_types")
 
 types.error = true
 
-String = types.create_type({
+String = types.create_type('String', {
     name = {
         type = types.STRING,
     }
 })
 
-NumberType = types.create_type({
+NumberType = types.create_type('NumberType', {
     value = {
         type = types.NUMBER,
     }
 })
 
-IntegerType = types.create_type({
+IntegerType = types.create_type('IntegerType', {
     value = {
         type = types.INTEGER,
     }
 })
 
-BooleanType = types.create_type({
+BooleanType = types.create_type('BooleanType', {
     logic_value = {
         type = types.BOOLEAN,
     }
 })
 
-ArrayType = types.create_type({
+ArrayType = types.create_type('ArrayType', {
     data = {
         type = types.ARRAY,
     }
 })
 
-DictType = types.create_type({
+DictType = types.create_type('DictType', {
     dict = {
         type = {}
     }
 })
 
-FunctionType = types.create_type({
+FunctionType = types.create_type('FunctionType', {
     func = {
         type = types.FUNCTION,
     }

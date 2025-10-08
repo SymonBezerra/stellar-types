@@ -2,7 +2,7 @@ types = require("stellar_types")
 
 -- types.warnings = false --> disable warnings
 
-StrType = types.create_type({
+StrType = types.create_type('StrType', {
     name = {
         ['type'] = types.STRING,
         ['validation'] = function(value)
@@ -23,7 +23,7 @@ str2 = StrType:new({
 assert(str.name ~= nil)
 assert(str2.name == nil)
 
-NumberType = types.create_type({
+NumberType = types.create_type('NumberType', {
     value = {
         ['type'] = types.NUMBER,
         ['validation'] = function(value)
@@ -48,7 +48,7 @@ assert(number2.value == 0.5)
 assert(number3.value == nil)
 assert(getmetatable(number) == NumberType)
 
-IntegerType = types.create_type({
+IntegerType = types.create_type('IntegerType', {
     value = {
         ['type'] = types.INTEGER,
         ['validation'] = function(value)
@@ -73,7 +73,7 @@ assert(integer2.value == nil)
 assert(integer3.value == nil)
 assert(getmetatable(integer) == IntegerType)
 
-BooleanType = types.create_type({
+BooleanType = types.create_type('BooleanType', {
     logic_value = {
         ['type'] = types.BOOLEAN,
         ['nullable'] = true
@@ -91,7 +91,7 @@ assert(boolean.logic_value == true)
 assert(boolean2.logic_value == false)
 assert(getmetatable(boolean) == BooleanType)
 
-ArrayType = types.create_type({
+ArrayType = types.create_type('ArrayType', {
     data = {
         ['type'] = types.ARRAY,
         ['validation'] = function(value)
@@ -128,7 +128,7 @@ assert(array2.data == nil)
 assert(array3.data == nil)
 assert(getmetatable(array) == ArrayType)
 
-PrimitiveType = types.create_type({
+PrimitiveType = types.create_type('PrimitiveType', {
     attr = {
         type = types.STRING,
         validation = function(value)
@@ -146,7 +146,7 @@ primitive2 = PrimitiveType:new({
     attr = "toomanycharacters"
 })
 
-NestedType = types.create_type({
+NestedType = types.create_type('NestedType', {
     nested = {
         type = PrimitiveType,
         validation = function(value)
@@ -164,7 +164,7 @@ nested2 = NestedType:new({
     nested = primitive2
 })
 
-DictType = types.create_type({
+DictType = types.create_type('DictType', {
     obj = {
         type = {},
         validation = function(value)
@@ -199,7 +199,7 @@ assert(nested.nested ~= nil)
 assert(nested2.nested == nil)
 assert(getmetatable(nested) == NestedType)
 
-FunctionType = types.create_type({
+FunctionType = types.create_type('FunctionType', {
     func = {
         type = types.FUNCTION,
         validation = function(value)
