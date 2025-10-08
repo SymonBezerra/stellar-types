@@ -42,6 +42,10 @@ int stm_new(lua_State *L) {
         lua_pop(L, 1);
     }
 
+    lua_pushstring(L, STELLAR_NAME);
+    lua_getfield(L, 1, STELLAR_NAME);
+    lua_rawset(L, instance_index);
+
     lua_getfield(L, 1, STELLAR_VALIDATORS);
     lua_pushnil(L);
     while(lua_next(L, -2) != 0) {
@@ -53,7 +57,6 @@ int stm_new(lua_State *L) {
             lua_pushvalue(L, -2);
             lua_settable(L, instance_index);
         }
-        // lua_pop(L, 1);
         lua_getfield(L, nullable_index, name);
         if (!lua_toboolean(L, -1) && lua_isnil(L, -2) && lua_isnil(L, -3)) {
             stm_nilerror("Field is not nullable", name);
