@@ -67,7 +67,7 @@ int st_create_type(lua_State *L) {
             lua_pushvalue(L, -1);
             lua_setfield(L, nullable_index, name);
         } else {
-            lua_pushboolean(L, TRUE);
+            lua_pushboolean(L, FALSE);
             lua_setfield(L, nullable_index, name);
         }
         lua_pop(L, 2);
