@@ -5,42 +5,49 @@ types.error = true
 String = types.create_type('String', {
     name = {
         type = types.STRING,
+        nullable = true,
     }
 })
 
 NumberType = types.create_type('NumberType', {
     value = {
         type = types.NUMBER,
+        nullable = true,
     }
 })
 
 IntegerType = types.create_type('IntegerType', {
     value = {
         type = types.INTEGER,
+        nullable = true,
     }
 })
 
 BooleanType = types.create_type('BooleanType', {
     logic_value = {
         type = types.BOOLEAN,
+        nullable = true,
     }
 })
 
 ArrayType = types.create_type('ArrayType', {
     data = {
         type = types.ARRAY,
+        nullable = true,
     }
 })
 
 DictType = types.create_type('DictType', {
     dict = {
-        type = {}
+        type = {},
+        nullable = true,
     }
 })
 
 FunctionType = types.create_type('FunctionType', {
     func = {
         type = types.FUNCTION,
+        nullable = true,
     }
 })
 

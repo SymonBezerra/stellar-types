@@ -56,7 +56,9 @@ int staux_register_type(lua_State *L) {
 }
 
 static int __staux_validator(lua_State *L, const char* type_value) {
-    if (strcmp(type_value, STELLAR_TSTRING) == 0) {
+    if (strcmp(type_value, STELLAR_TANY) == 0) {
+        return TRUE;
+    } else if (strcmp(type_value, STELLAR_TSTRING) == 0) {
         return lua_type(L, -2) == LUA_TSTRING;
     } else if (strcmp(type_value, STELLAR_TNUMBER) == 0) {
         return lua_type(L, -2) == LUA_TNUMBER;

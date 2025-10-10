@@ -1,0 +1,2 @@
+# For integration with Python, use the `lupa` package
+lupa==2.5

@@ -31,10 +31,6 @@ int st_create_type(lua_State *L) {
                 st_utypeerr(name, lua_tostring(L, -1));
             }
             const char* type_value = lua_tostring(L, -1);
-            if (strcmp(type_value, STELLAR_TANY) == 0) {
-                lua_pop(L, 2);
-                continue;
-            }
             lua_pushstring(L, type_value);
         } else if (lua_type(L, -1) == LUA_TTABLE) {
             lua_pushvalue(L, -1);

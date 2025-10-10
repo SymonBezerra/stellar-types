@@ -7,7 +7,8 @@ StringType = types.create_type('StringType', {
         type = 'string',
         validation = function(value)
             return value ~= 'error'
-        end
+        end,
+        nullable = true
     }
 })
 
@@ -22,7 +23,8 @@ IntegerType = types.create_type('IntegerType', {
         type = 'integer',
         validation = function(value)
             return value % 2 == 0
-        end
+        end,
+        nullable = true
     }
 })
 
@@ -37,7 +39,8 @@ NumberType = types.create_type('NumberType', {
         type = 'number',
         validation = function(value)
             return value > 0
-        end
+        end,
+        nullable = true
     }
 })
 
@@ -52,7 +55,8 @@ BooleanType = types.create_type('BooleanType', {
         type = 'boolean',
         validation = function(value)
             return value == true
-        end
+        end,
+        nullable = true
     }
 })
 
@@ -67,7 +71,8 @@ ArrayType = types.create_type('ArrayType', {
         type = 'array',
         validation = function(value)
             return #value > 3
-        end
+        end,
+        nullable = true
     }
 })
 
@@ -82,7 +87,8 @@ DictType = types.create_type('DictType', {
         type = {},
         validation = function(value)
             return value.enabled == true
-        end
+        end,
+        nullable = true
     }
 })
 
@@ -97,7 +103,8 @@ NestedType = types.create_type('NestedType', {
         type = StringType,
         validation = function(value)
             return value.name ~= nil
-        end
+        end,
+        nullable = true
     },
 })
 
