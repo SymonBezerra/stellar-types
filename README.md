@@ -15,12 +15,7 @@ instance = Config:new({
     value = 'config value'
 })
 
-instance2 = Config:new({
-    value = 0
-})
-
 print(instance.value) --> 'config value'
-print(instance2.value) --> nil
 ```
 
 The first argument is a class name that will be passed to a `__name` attribute and also used in the `__tostring` metamethod. The second argument is a table that will receive the schema for the object we are creating.
