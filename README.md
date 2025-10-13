@@ -55,7 +55,6 @@ Config = types.create_type('Config', {
     ['value'] = {
         ['type'] = types.STRING,
         ['validation'] = function(v) return #v > 0 end,
-        ['error'] = true,
         ['default'] = 'default',
         ['nullable'] = true
     }
